@@ -12,7 +12,7 @@
 
     <string name="login_intro">Accedi con il tuo account tado°. Approvi l\'accesso sul sito di tado°, quindi questa app non vede mai la tua password.</string>
     <string name="action_sign_in">Accedi con tado°</string>
-    <string name="login_instructions">Approva l\'accesso nel browser e verifica che il codice mostrato sia %1$s. Questa schermata prosegue automaticamente.</string>
+    <string name="login_instructions">Nel browser tado° chiede un codice utente: è già compilato e deve essere %1$s. Premi Invia, accedi con il tuo account tado° e approva. Poi torna a questa app.</string>
     <string name="action_open_login">Apri la pagina di accesso</string>
     <string name="action_cancel">Annulla</string>
     <string name="action_save">Salva</string>

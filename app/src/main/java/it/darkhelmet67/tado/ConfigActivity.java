@@ -118,8 +118,20 @@ public class ConfigActivity extends AppCompatActivity {
         findViewById(R.id.buttonSave).setOnClickListener(v -> save());
         findViewById(R.id.buttonSignOut).setOnClickListener(v -> signOut());
 
+        String[] pending = prefs.getPendingLogin();
         if (api.isSignedIn()) {
+            prefs.clearPendingLogin();
             loadZones();
+        } else if (pending != null) {
+            // Resume a login started before this screen was recreated (e.g. while in the browser).
+            loginUrl = pending[2];
+            textInstructions.setText(getString(R.string.login_instructions, pending[1]));
+            show(groupPending);
+            DeviceAuth auth = new DeviceAuth(pending[0], pending[1], pending[2], pending[2],
+                    Integer.parseInt(pending[3]), 0);
+            long expiresAt = Long.parseLong(pending[4]);
+            loginCancelled = false;
+            io.execute(() -> pollForApproval(auth, expiresAt));
         } else {
             show(groupSignIn);
         }
@@ -141,12 +153,14 @@ public class ConfigActivity extends AppCompatActivity {
             try {
                 DeviceAuth auth = api.startDeviceAuth();
                 loginUrl = auth.verificationUriComplete;
+                long expiresAt = System.currentTimeMillis() + auth.expiresInSeconds * 1000L;
+                prefs.setPendingLogin(auth.deviceCode, auth.userCode, loginUrl, auth.intervalSeconds, expiresAt);
                 ui.post(() -> {
                     textInstructions.setText(getString(R.string.login_instructions, auth.userCode));
                     show(groupPending);
                     openLoginPage();
                 });
-                pollForApproval(auth);
+                pollForApproval(auth, expiresAt);
             } catch (TadoException e) {
                 ui.post(() -> fail(e));
             }
@@ -154,8 +168,7 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     /** Runs on the io thread until the user approves, declines, cancels or the code expires. */
-    private void pollForApproval(DeviceAuth auth) {
-        long deadline = System.currentTimeMillis() + auth.expiresInSeconds * 1000L;
+    private void pollForApproval(DeviceAuth auth, long deadline) {
         long intervalMillis = Math.max(auth.intervalSeconds, 1) * 1000L;
         try {
             while (!loginCancelled && System.currentTimeMillis() < deadline) {
@@ -163,18 +176,21 @@ public class ConfigActivity extends AppCompatActivity {
                 if (loginCancelled) return;
                 try {
                     api.pollToken(auth.deviceCode);
+                    prefs.clearPendingLogin();
                     ui.post(this::loadZones);
                     return;
                 } catch (TadoException e) {
                     if (e.kind == TadoException.Kind.SLOW_DOWN) {
                         intervalMillis += 5000;
                     } else if (e.kind != TadoException.Kind.PENDING) {
+                        prefs.clearPendingLogin();
                         ui.post(() -> fail(e));
                         return;
                     }
                 }
             }
             if (!loginCancelled) {
+                prefs.clearPendingLogin();
                 ui.post(() -> {
                     Toast.makeText(this, R.string.error_login_expired, Toast.LENGTH_LONG).show();
                     show(groupSignIn);
@@ -196,6 +212,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     private void cancelLogin() {
         loginCancelled = true;
+        prefs.clearPendingLogin();
         show(groupSignIn);
     }
 
@@ -273,7 +290,8 @@ public class ConfigActivity extends AppCompatActivity {
             default: message = R.string.error_generic; break;
         }
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        textStatus.setText("");
+        // Keep the technical reason on screen so problems can be reported.
+        textStatus.setText(getString(message) + " (" + e.kind + ": " + e.getMessage() + ")");
         show(api.isSignedIn() && e.kind != TadoException.Kind.AUTH_EXPIRED ? groupSetup : groupSignIn);
     }
 

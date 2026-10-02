@@ -15,7 +15,7 @@
     <!-- Settings -->
     <string name="login_intro">Sign in with your tado° account. You approve the login on tado°\'s own website, so this app never sees your password.</string>
     <string name="action_sign_in">Sign in with tado°</string>
-    <string name="login_instructions">Approve the login in your browser and check that the code shown there is %1$s. This screen continues automatically.</string>
+    <string name="login_instructions">In your browser, tado° asks for a user code: it is already filled in and should be %1$s. Press Submit, then sign in with your tado° account and approve. Then come back to this app.</string>
     <string name="action_open_login">Open login page</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
