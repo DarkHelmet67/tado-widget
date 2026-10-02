@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutWidget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="0dp"
+    android:background="@android:color/transparent"
+    android:padding="@dimen/widget_margin"
+    tools:background="@android:color/darker_gray"
+    tools:layout_height="@dimen/widget_height">
+
+    <ImageView
+        android:id="@+id/imageViewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/shape_rounded_corners" />
+
+    <ImageView
+        android:id="@+id/imageViewArrowLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/activity_button_margin"
+        android:alpha="0.5"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_arrow_left_white"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imageViewArrowRight"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/activity_button_margin"
+        android:alpha="0.5"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_arrow_right_white"
+        android:visibility="visible" />
+
+    <AdapterViewFlipper
+        android:id="@+id/pageFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/imageViewArrowRight"
+        android:layout_toRightOf="@id/imageViewArrowLeft"
+        android:autoStart="false"
+        android:flipInterval="0"
+        android:loopViews="true"
+        android:visibility="visible"
+        tools:layout="@layout/tado_widget_page_1" />
+
+    <ProgressBar
+        android:id="@+id/progressBarLoading"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_toLeftOf="@id/imageViewArrowRight"
+        android:layout_toRightOf="@id/imageViewArrowLeft"
+        android:gravity="center"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progressbar"
+        android:padding="@dimen/widget_padding"
+        android:progressDrawable="@drawable/progressbar"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</RelativeLayout>

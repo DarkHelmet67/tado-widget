@@ -1,0 +1,62 @@
+<resources>
+
+    <!-- TADO CONFIG -->
+    <bool name="isDebug" translatable="false">true</bool>
+
+    <string-array name="array_update_time_labels">
+        <item>manual</item>
+        <item>1 minute</item>
+        <item>5 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>60 minutes</item>
+    </string-array>
+    <array name="array_update_time_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>5</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+    </array>
+
+    <!-- TADO WEB SERVICES-->
+    <string name="url_server" translatable="false">https://my.tado.com</string>
+    <string name="url_getAppUsers" translatable="false" formatted="false">/mobile/1.6/getAppUsers?username=%USERNAME&amp;password=%PASSWORD</string>
+    <string name="url_claimAppUser" translatable="false" formatted="false">/mobile/1.6/claimAppUser?username=%USERNAME&amp;password=%PASSWORD&amp;nickname=%NICKNAME&amp;deviceModel=%DEVICE_MODEL&amp;devicePlatform=Android&amp;deviceUuid=NONE&amp;deviceOsVer=%DEVICE_OSVER&amp;appVersion=2.5.0&amp;geoTrackingEnabled=false&amp;locale=it</string>
+    <string name="url_getCurrentState" translatable="false" formatted="false">/mobile/1.6/getCurrentState?username=%USERNAME&amp;password=%PASSWORD</string>
+    <!-- TADO WEB SERVICES - 2016-01-01 -->
+    <string name="url_createAppUser" translatable="false" formatted="false">/mobile/1.6/createAppUser?username=%USERNAME&amp;password=%PASSWORD&amp;nickname=%NICKNAME&amp;deviceModel=%DEVICE_MODEL&amp;devicePlatform=Android&amp;deviceUuid=NONE&amp;deviceOsVer=%DEVICE_OSVER&amp;appVersion=2.5.0&amp;geoTrackingEnabled=false&amp;locale=it</string>
+
+    <!-- ENGLISH Strings related to TADO CONFIG -->
+    <string name="app_name" translatable="false">tado° Widget</string>
+    <string name="app_config_name">tado° Widget Config</string>
+    <string name="label_last_update">Last update:</string>
+
+    <string name="prompt_email">Email / User Name</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_nickname">Nickname</string>
+    <string name="prompt_device">User name, eg. "Phone Laura"</string>
+    <string name="prompt_device_label">Set user name for this device</string>
+    <string name="prompt_update_time">Select update frequency</string>
+    <string name="prompt_widget_textsize">Change text size resizing widget</string>
+    <string name="action_get_devices">Get devices</string>
+    <string name="prompt_devices_registered">User names already registered</string>
+    <string name="action_save">Save</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_login">Login error, please check username and password!</string>
+    <string name="error_authorization">Token expired, please login again!</string>
+
+    <!-- DIALOG -->
+    <string name="label_yes">YES</string>
+    <string name="label_no">NO</string>
+    <string name="label_ok">OK</string>
+    <string name="label_cancel">CANCEL</string>
+    <string name="label_network_title">No network access</string>
+    <string name="label_network_message">Please ensure you are connected to the Internet!</string>
+
+
+</resources>

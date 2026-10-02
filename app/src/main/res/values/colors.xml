@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--   your app branding color for the app bar -->
+    <color name="colorPrimary">#92A8B4</color>
+    <!--   darker variant for the status bar and contextual app bars -->
+    <color name="colorPrimaryDark">#808080</color>
+    <!--   theme UI controls like checkboxes and text fields -->
+    <color name="colorAccent">#6EAE33</color>
+    <color name="colorAccentAlpha50">#806EAE33</color>
+
+    <color name="textColorPrimary">#404040</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="buttonBackground">#6EAE33</color>
+
+    <!-- TADO STATUS COLORS -->
+    <color name="tadoSleep">#A00164A8</color>
+    <color name="tadoHome">#A0FAB907</color>
+    <color name="tadoAway">#A062AA12</color>
+    <color name="tadoManual">#A0666666</color>
+    <color name="tadoStandby">#A0000000</color>
+
+    <!-- ALPHA GRADIENT -->
+    <color name="blackAlpha25">#40000000</color>
+    <color name="blackAlpha50">#80000000</color>
+    <color name="blackAlpha75">#BF000000</color>
+    <color name="blackAlpha90">#E6000000</color>
+    <color name="whiteAlpha25">#40FFFFFF</color>
+    <color name="whiteAlpha50">#80FFFFFF</color>
+    <color name="whiteAlpha75">#BFFFFFFF</color>
+    <color name="whiteAlpha90">#E6FFFFFF</color>
+</resources>

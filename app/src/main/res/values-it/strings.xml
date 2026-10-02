@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- TADO CONFIG -->
+    <string-array name="array_update_time_labels">
+        <item>manuale</item>
+        <item>1 minuto</item>
+        <item>5 minuti</item>
+        <item>15 minuti</item>
+        <item>30 minuti</item>
+        <item>60 minuti</item>
+    </string-array>
+
+    <!-- ITALIAN Strings related to TADO CONFIG -->
+    <string name="action_get_devices">Seleziona dispositivo</string>
+    <string name="action_save">Salva</string>
+    <string name="app_config_name">Impostazioni widget tado°</string>
+    <string name="error_authorization">Token scaduto, inserire nuovamente le credenziali</string>
+    <string name="error_field_required">Campo obbligatorio</string>
+    <string name="error_incorrect_password">Password errata</string>
+    <string name="label_last_update">Ultimo aggiornamento:</string>
+    <string name="prompt_device">Nome utente, ad es. "Telefono Laura"</string>
+    <string name="prompt_email">Email / Nome Utente</string>
+    <string name="prompt_nickname">Soprannome</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_update_time">Frequenza aggiornamento</string>
+    <string name="prompt_widget_textsize">Ridimensiona testo nel widget</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_login">Errore nella login, verifica username e password!</string>
+    <string name="prompt_device_label">Imposta il nome utente per questo dispositivo</string>
+    <string name="prompt_devices_registered">Nomi utenti già registrati</string>
+    <!-- DIALOG -->
+    <string name="label_yes">SI</string>
+    <string name="label_no">NO</string>
+    <string name="label_ok">OK</string>
+    <string name="label_cancel">CANCELLA</string>
+    <string name="label_network_title">Assenza collegamento di rete</string>
+    <string name="label_network_message">Per favore assicurati di essere connesso ad Internet!</string>
+
+</resources>

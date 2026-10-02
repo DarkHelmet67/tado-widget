@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <corners android:radius="@dimen/widget_corner_radius" />
+
+    <!-- "setColorFilter" stop working!!!
+    <stroke
+        android:width="1dp"
+        android:color="@color/whiteAlpha90" />
+    -->
+
+    <!-- <solid android:color="@android:color/white" /> -->
+    <gradient
+        android:angle="90"
+        android:endColor="@color/whiteAlpha90"
+        android:startColor="@color/whiteAlpha50" />
+
+</shape>
