@@ -1,41 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_config_name">Impostazioni tado° Widget</string>
+    <string name="widget_description">Temperatura della stanza e target di una zona tado°.</string>
 
-    <!-- TADO CONFIG -->
-    <string-array name="array_update_time_labels">
-        <item>manuale</item>
-        <item>1 minuto</item>
-        <item>5 minuti</item>
-        <item>15 minuti</item>
-        <item>30 minuti</item>
-        <item>60 minuti</item>
+    <string name="label_last_update">Aggiornato</string>
+    <string name="label_heating">Riscaldamento</string>
+    <string name="action_open_settings">Apri impostazioni</string>
+    <string name="status_not_configured">Tocca per configurare</string>
+    <string name="status_needs_login">Tocca per accedere</string>
+    <string name="status_rate_limited">Limite giornaliero tado° raggiunto</string>
+    <string name="status_error">Aggiornamento non riuscito</string>
+
+    <string name="login_intro">Accedi con il tuo account tado°. Approvi l\'accesso sul sito di tado°, quindi questa app non vede mai la tua password.</string>
+    <string name="action_sign_in">Accedi con tado°</string>
+    <string name="login_instructions">Approva l\'accesso nel browser e verifica che il codice mostrato sia %1$s. Questa schermata prosegue automaticamente.</string>
+    <string name="action_open_login">Apri la pagina di accesso</string>
+    <string name="action_cancel">Annulla</string>
+    <string name="action_save">Salva</string>
+    <string name="action_sign_out">Esci</string>
+    <string name="prompt_zone">Zona da mostrare</string>
+    <string name="prompt_update_time">Frequenza di aggiornamento</string>
+    <string name="note_rate_limit">tado° consente agli account gratuiti circa 100 richieste al giorno. Ogni aggiornamento ne usa una: consigliamo un aggiornamento ogni ora.</string>
+    <string name="status_contacting">Contatto tado°…</string>
+    <string name="status_loading_zones">Carico le tue zone…</string>
+
+    <string-array name="update_interval_labels">
+        <item>Manuale (tocca il widget)</item>
+        <item>Ogni 30 minuti</item>
+        <item>Ogni ora</item>
+        <item>Ogni 2 ore</item>
+        <item>Ogni 4 ore</item>
     </string-array>
 
-    <!-- ITALIAN Strings related to TADO CONFIG -->
-    <string name="action_get_devices">Seleziona dispositivo</string>
-    <string name="action_save">Salva</string>
-    <string name="app_config_name">Impostazioni widget tado°</string>
-    <string name="error_authorization">Token scaduto, inserire nuovamente le credenziali</string>
-    <string name="error_field_required">Campo obbligatorio</string>
-    <string name="error_incorrect_password">Password errata</string>
-    <string name="label_last_update">Ultimo aggiornamento:</string>
-    <string name="prompt_device">Nome utente, ad es. "Telefono Laura"</string>
-    <string name="prompt_email">Email / Nome Utente</string>
-    <string name="prompt_nickname">Soprannome</string>
-    <string name="prompt_password">Password</string>
-    <string name="prompt_update_time">Frequenza aggiornamento</string>
-    <string name="prompt_widget_textsize">Ridimensiona testo nel widget</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_login">Errore nella login, verifica username e password!</string>
-    <string name="prompt_device_label">Imposta il nome utente per questo dispositivo</string>
-    <string name="prompt_devices_registered">Nomi utenti già registrati</string>
-    <!-- DIALOG -->
-    <string name="label_yes">SI</string>
-    <string name="label_no">NO</string>
-    <string name="label_ok">OK</string>
-    <string name="label_cancel">CANCELLA</string>
-    <string name="label_network_title">Assenza collegamento di rete</string>
-    <string name="label_network_message">Per favore assicurati di essere connesso ad Internet!</string>
-
+    <string name="error_login_denied">Accesso rifiutato.</string>
+    <string name="error_login_expired">Il codice è scaduto. Riprova.</string>
+    <string name="error_no_browser">Nessun browser per aprire la pagina di accesso.</string>
+    <string name="error_no_zones">Nessuna zona trovata nel tuo account tado°.</string>
+    <string name="error_rate_limited">Limite giornaliero di richieste tado° raggiunto. Riprova più tardi.</string>
+    <string name="error_network">Impossibile raggiungere tado°. Controlla la connessione.</string>
+    <string name="error_generic">Qualcosa è andato storto con tado°.</string>
 </resources>

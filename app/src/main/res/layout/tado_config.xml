@@ -1,190 +1,126 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="0dp"
-    tools:context=".ConfigActivity">
+    android:fillViewport="true">
 
-    <!-- TOOLBAR -->
-    <include layout="@layout/toolbar" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_default_margin">
 
-        <!-- 1st STEP -->
-        <LinearLayout
-            android:id="@+id/layout_login"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible"
-            tools:visibility="visible">
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
 
-                <EditText
-                    android:id="@+id/config_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/config_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/config_devices"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_button_height"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/selector_btn_green"
-                android:text="@string/action_get_devices"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- 2nd STEP -->
+        <!-- Not signed in -->
         <LinearLayout
-            android:id="@+id/layout_config"
+            android:id="@+id/groupSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="gone">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="center_horizontal"
-                android:textAlignment="center"
-                android:text="@string/prompt_device_label"
-                android:textSize="24sp" />
+                android:layout_marginTop="16dp"
+                android:text="@string/login_intro" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerInside"
-                android:layout_height="@dimen/widget_height"
-                android:src="@drawable/devices"/>
-
-            <!--
-            <Spinner
-                android:id="@+id/spinner_devices"
+            <Button
+                android:id="@+id/buttonSignIn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:prompt="@string/prompt_device" />
-                -->
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_in" />
+        </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+        <!-- Waiting for the user to approve in the browser -->
+        <LinearLayout
+            android:id="@+id/groupPending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textInstructions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
 
-                <EditText
-                    android:id="@+id/config_device"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_device"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+            <Button
+                android:id="@+id/buttonOpenLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_open_login" />
 
-            </android.support.design.widget.TextInputLayout>
+            <Button
+                android:id="@+id/buttonCancelLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_cancel" />
+        </LinearLayout>
+
+        <!-- Signed in: choose zone and refresh interval -->
+        <LinearLayout
+            android:id="@+id/groupSetup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/prompt_update_time"
-                android:textSize="@dimen/activity_config_text_label" />
+                android:layout_marginTop="16dp"
+                android:text="@string/prompt_zone" />
 
             <Spinner
-                android:id="@+id/spinner_update_time"
+                android:id="@+id/spinnerZone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/array_update_time_labels"
-                android:prompt="@string/prompt_update_time" />
+                android:layout_height="48dp" />
 
-            <Switch
-                android:id="@+id/swich_text_size"
-                style="@style/SwitchTextAppearance"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginTop="0dp"
-                android:switchTextAppearance="@style/SwitchTextAppearance"
-                android:text="@string/prompt_widget_textsize"
-                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginTop="16dp"
+                android:text="@string/prompt_update_time" />
+
+            <Spinner
+                android:id="@+id/spinnerInterval"
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/note_rate_limit"
                 android:textSize="@dimen/activity_config_text_label" />
 
             <Button
-                android:id="@+id/config_save"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_button_height"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="@drawable/selector_btn_green"
-                android:text="@string/action_save"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-            <TextView
+                android:id="@+id/buttonSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:text="@string/prompt_devices_registered"
-                android:textSize="@dimen/activity_config_text_label" />
+                android:layout_marginTop="16dp"
+                android:text="@string/action_save" />
 
-            <ListView
-                android:id="@+id/listview_devices"
+            <Button
+                android:id="@+id/buttonSignOut"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
+                android:layout_height="wrap_content"
+                android:text="@string/action_sign_out" />
         </LinearLayout>
-
-        <!-- Login progress -->
-        <ProgressBar
-            android:id="@+id/config_progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="@dimen/activity_progress_width"
-            android:layout_height="@dimen/activity_progress_width"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-    </RelativeLayout>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

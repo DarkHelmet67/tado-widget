@@ -1,62 +1,52 @@
 <resources>
+    <string name="app_name" translatable="false">tado° Widget</string>
+    <string name="app_config_name">tado° Widget settings</string>
+    <string name="widget_description">Room temperature and target of one tado° zone.</string>
 
-    <!-- TADO CONFIG -->
-    <bool name="isDebug" translatable="false">true</bool>
+    <!-- Widget -->
+    <string name="label_last_update">Updated</string>
+    <string name="label_heating">Heating</string>
+    <string name="action_open_settings">Open settings</string>
+    <string name="status_not_configured">Tap to set up</string>
+    <string name="status_needs_login">Tap to sign in</string>
+    <string name="status_rate_limited">Daily tado° limit reached</string>
+    <string name="status_error">Update failed</string>
 
-    <string-array name="array_update_time_labels">
-        <item>manual</item>
-        <item>1 minute</item>
-        <item>5 minutes</item>
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>60 minutes</item>
+    <!-- Settings -->
+    <string name="login_intro">Sign in with your tado° account. You approve the login on tado°\'s own website, so this app never sees your password.</string>
+    <string name="action_sign_in">Sign in with tado°</string>
+    <string name="login_instructions">Approve the login in your browser and check that the code shown there is %1$s. This screen continues automatically.</string>
+    <string name="action_open_login">Open login page</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="prompt_zone">Zone to show</string>
+    <string name="prompt_update_time">Refresh interval</string>
+    <string name="note_rate_limit">tado° allows free accounts only about 100 requests per day. Each refresh uses one, so hourly refreshes are recommended.</string>
+    <string name="status_contacting">Contacting tado°…</string>
+    <string name="status_loading_zones">Loading your zones…</string>
+
+    <string-array name="update_interval_labels">
+        <item>Manual (tap the widget)</item>
+        <item>Every 30 minutes</item>
+        <item>Every hour</item>
+        <item>Every 2 hours</item>
+        <item>Every 4 hours</item>
     </string-array>
-    <array name="array_update_time_values" translatable="false">
+    <integer-array name="update_interval_values" translatable="false">
         <item>0</item>
-        <item>1</item>
-        <item>5</item>
-        <item>15</item>
         <item>30</item>
         <item>60</item>
-    </array>
+        <item>120</item>
+        <item>240</item>
+    </integer-array>
 
-    <!-- TADO WEB SERVICES-->
-    <string name="url_server" translatable="false">https://my.tado.com</string>
-    <string name="url_getAppUsers" translatable="false" formatted="false">/mobile/1.6/getAppUsers?username=%USERNAME&amp;password=%PASSWORD</string>
-    <string name="url_claimAppUser" translatable="false" formatted="false">/mobile/1.6/claimAppUser?username=%USERNAME&amp;password=%PASSWORD&amp;nickname=%NICKNAME&amp;deviceModel=%DEVICE_MODEL&amp;devicePlatform=Android&amp;deviceUuid=NONE&amp;deviceOsVer=%DEVICE_OSVER&amp;appVersion=2.5.0&amp;geoTrackingEnabled=false&amp;locale=it</string>
-    <string name="url_getCurrentState" translatable="false" formatted="false">/mobile/1.6/getCurrentState?username=%USERNAME&amp;password=%PASSWORD</string>
-    <!-- TADO WEB SERVICES - 2016-01-01 -->
-    <string name="url_createAppUser" translatable="false" formatted="false">/mobile/1.6/createAppUser?username=%USERNAME&amp;password=%PASSWORD&amp;nickname=%NICKNAME&amp;deviceModel=%DEVICE_MODEL&amp;devicePlatform=Android&amp;deviceUuid=NONE&amp;deviceOsVer=%DEVICE_OSVER&amp;appVersion=2.5.0&amp;geoTrackingEnabled=false&amp;locale=it</string>
-
-    <!-- ENGLISH Strings related to TADO CONFIG -->
-    <string name="app_name" translatable="false">tado° Widget</string>
-    <string name="app_config_name">tado° Widget Config</string>
-    <string name="label_last_update">Last update:</string>
-
-    <string name="prompt_email">Email / User Name</string>
-    <string name="prompt_password">Password</string>
-    <string name="prompt_nickname">Nickname</string>
-    <string name="prompt_device">User name, eg. "Phone Laura"</string>
-    <string name="prompt_device_label">Set user name for this device</string>
-    <string name="prompt_update_time">Select update frequency</string>
-    <string name="prompt_widget_textsize">Change text size resizing widget</string>
-    <string name="action_get_devices">Get devices</string>
-    <string name="prompt_devices_registered">User names already registered</string>
-    <string name="action_save">Save</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="error_login">Login error, please check username and password!</string>
-    <string name="error_authorization">Token expired, please login again!</string>
-
-    <!-- DIALOG -->
-    <string name="label_yes">YES</string>
-    <string name="label_no">NO</string>
-    <string name="label_ok">OK</string>
-    <string name="label_cancel">CANCEL</string>
-    <string name="label_network_title">No network access</string>
-    <string name="label_network_message">Please ensure you are connected to the Internet!</string>
-
-
+    <!-- Errors -->
+    <string name="error_login_denied">Login was declined.</string>
+    <string name="error_login_expired">The login code expired. Please try again.</string>
+    <string name="error_no_browser">No browser found to open the login page.</string>
+    <string name="error_no_zones">No zones found in your tado° account.</string>
+    <string name="error_rate_limited">tado° daily request limit reached. Try again later.</string>
+    <string name="error_network">Could not reach tado°. Check your connection.</string>
+    <string name="error_generic">Something went wrong talking to tado°.</string>
 </resources>

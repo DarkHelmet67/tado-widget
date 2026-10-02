@@ -1,52 +1,5 @@
 <resources>
-
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--   your app branding color for the app bar -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <!--   darker variant for the status bar and contextual app bars -->
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <!--   theme UI controls like checkboxes and text fields -->
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
-
-        <!-- NO Default ActionBar! -->
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-
-        <!-- TEXTINPUTLAYOUT HINT COLOR -->
-        <item name="android:textColorHint">@color/colorAccent</item>
-        <item name="colorControlNormal">@color/colorAccent</item>
-        <item name="colorControlActivated">#ff0000</item>
-        <item name="colorControlHighlight">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/windowBackground</item>
-
-        <!-- ALERT DIALOGS -->
-        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorAccent</item>
     </style>
-
-    <!-- BUTTON -->
-    <style name="Default.Button" parent="@android:style/Widget.Button">
-        <item name="android:background">@color/buttonBackground</item>
-        <item name="android:textColor">@color/windowBackground</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <!-- DIALOG -->
-    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:background">@color/windowBackground</item>
-    </style>
-
-    <!-- SWITCHES -->
-    <style name="SwitchTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
-        <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textSize">@dimen/activity_config_text_label</item>
-    </style>
-
 </resources>

@@ -1,43 +1,38 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.darkhelmet67.tado">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
-        android:debuggable="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:installLocation="internalOnly"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- app widget itself -->
-        <receiver android:name=".TadoWidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="AUTO_UPDATE" />
-            </intent-filter>
 
+        <!-- The home-screen widget -->
+        <receiver
+            android:name=".widget.TadoWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/tado_widget_info" />
         </receiver>
-        <!-- The service serving the RemoteViews to the collection widget -->
-        <service
-            android:name=".TadoWidgetService"
-            android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <!-- login / config activity -->
+
+        <!-- Sign-in and settings; also shown when the widget is added -->
         <activity
             android:name=".ConfigActivity"
-            android:label="@string/app_config_name"
-            android:launchMode="singleInstance">
+            android:exported="true"
+            android:label="@string/app_config_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
