@@ -14,8 +14,22 @@ android {
         versionName '2.0.0'
     }
 
+    // Release signing comes from the environment (see docs/releasing.md); never commit keys.
+    signingConfigs {
+        release {
+            def keystorePath = System.getenv('TADO_KEYSTORE_FILE')
+            if (keystorePath) {
+                storeFile file(keystorePath)
+                storePassword System.getenv('TADO_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('TADO_KEY_ALIAS')
+                keyPassword System.getenv('TADO_KEY_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (System.getenv('TADO_KEYSTORE_FILE')) signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
