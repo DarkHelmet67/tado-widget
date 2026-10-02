@@ -3,7 +3,7 @@
 Context for AI assistants working on this repo. User-facing docs: README.md, docs/tado-api.md, docs/releasing.md, PRIVACY.md, CONTRIBUTING.md. **Update the docs and this file whenever behaviour or architecture changes** (the owner wants this to be a well-documented open-source project).
 
 ## What this is
-Unofficial Android widget for tado° thermostats by DarkHelmet67 (https://github.com/DarkHelmet67/tado-widget, public, branch `main`). Original 1.x (2015-16) used tado°'s private `/mobile/1.6` API with the password in URLs; that stopped working in March 2025. **2.0.0 is a rewrite** on the OAuth device-code flow + `v2` REST API, aimed at re-publishing on Google Play. The 1.x code is in git history (first commits).
+Unofficial Android widget for tado° thermostats by DarkHelmet67 (https://github.com/DarkHelmet67/tado-widget, public, branch `main`). Original 1.x (2015-16) used tado°'s private `/mobile/1.6` API with the password in URLs; that stopped working in March 2025. **2.0 is a rewrite** on the OAuth device-code flow + `v2` REST API, aimed at re-publishing on Google Play. The 1.x code is in git history (first commits).
 
 ## Environment constraints
 - The owner has **no local Android SDK or JDK**. Verify everything through GitHub Actions: push, then `gh run list` / `gh run watch <id> --exit-status` / `gh run view <id> --log-failed`. A first-try green build is not guaranteed for new code; iterate on CI logs.
@@ -30,7 +30,8 @@ No official API reference exists. Auth: `https://login.tado.com/oauth2/{device_a
 ## Status / TODO
 - Done: build upgrade, API client, login, widget, settings, tests, CI (`build.yml`), release workflow (`release.yml`, needs signing secrets), docs, privacy policy.
 - Not yet verified on a real device or against the live tado° API (CI only runs unit tests with a mock server). First real-world test should confirm the device flow, the `/me` and zone-state fields, and widget rendering.
-- Open items: `app/*.apk` old release binaries are still tracked in git (suggest moving to GitHub Releases); unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`, arrows) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; LICENSE copyright still credits the tutorial author (“obaro”); possible per-widget zones, humidity, dark theme polish.
+- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.0` / code 7.
+- Open items: unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`, arrows) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; LICENSE copyright still credits the tutorial author (“obaro”); possible per-widget zones, humidity, dark theme polish.
 
 ## Repo hygiene — IMPORTANT
 - The owner's real tado° credentials/logs/screenshots are in a local, git-ignored folder (`.private files/`, formerly `misc files/`). Never un-ignore it, read it into commits/docs/issues, or quote it. The owner was advised to rotate that password.

@@ -16,7 +16,7 @@ An unofficial Android home-screen widget that shows the current temperature, tar
 
 ## Install
 
-Download the latest APK from the [Releases](https://github.com/DarkHelmet67/tado-widget/releases) page, or build it yourself (below). Requires Android 8.0 (API 26) or newer and a tado° account.
+Download the latest APK from the [Releases](https://github.com/DarkHelmet67/tado-widget/releases) page (every build, including the old 1.x ones, is also kept in [`versions/`](versions)), or build it yourself (below). Requires Android 8.0 (API 26) or newer and a tado° account.
 
 Add the widget from your launcher's widget picker, sign in, pick a zone, and save. Tapping the mode icon reopens the settings; tapping anywhere else refreshes.
 
@@ -47,7 +47,7 @@ More documentation: [tado° API notes](docs/tado-api.md), [releasing and Google 
 
 ## Version history
 
-- **2.0.0**: rewritten for current Android and tado°'s OAuth/v2 API (the 1.x private mobile API and password login no longer work). One widget layout, one zone, no collection pages.
+- **2.0**: rewritten for current Android and tado°'s OAuth/v2 API (the 1.x private mobile API and password login no longer work). One widget layout, one zone, no collection pages.
 - **1.x** (2015–2016): original app using tado°'s private mobile API.
 
 ## Known limitations
