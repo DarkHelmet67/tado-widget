@@ -47,6 +47,7 @@ More documentation: [tado° API notes](docs/tado-api.md), [releasing and Google 
 
 ## Version history
 
+- **2.0.1**: sign-in survives the settings screen being recreated, clearer errors and user-code instructions.
 - **2.0**: rewritten for current Android and tado°'s OAuth/v2 API (the 1.x private mobile API and password login no longer work). One widget layout, one zone, no collection pages.
 - **1.x** (2015–2016): original app using tado°'s private mobile API.
 
