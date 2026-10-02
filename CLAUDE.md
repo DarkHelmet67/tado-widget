@@ -1,40 +1,37 @@
 # CLAUDE.md
 
-Context for AI assistants working on this repo. See README.md for the user-facing description.
+Context for AI assistants working on this repo. User-facing docs: README.md, docs/tado-api.md, docs/releasing.md, PRIVACY.md, CONTRIBUTING.md. **Update the docs and this file whenever behaviour or architecture changes** (the owner wants this to be a well-documented open-source project).
 
 ## What this is
-Unofficial Android widget for tado° thermostats, by DarkHelmet67. Written 2015–16, started from the "SimpleAndroidWidget" tutorial sample (hence `LICENSE` says "obaro"; README.md originally was that sample's). Dormant since 2016.
+Unofficial Android widget for tado° thermostats by DarkHelmet67 (https://github.com/DarkHelmet67/tado-widget, public, branch `main`). Original 1.x (2015-16) used tado°'s private `/mobile/1.6` API with the password in URLs; that stopped working in March 2025. **2.0.0 is a rewrite** on the OAuth device-code flow + `v2` REST API, aimed at re-publishing on Google Play. The 1.x code is in git history (first commits).
 
-## Toolchain (very old, will not build in current Android Studio)
-- Root `build.gradle`: Android Gradle plugin 1.5.0, `jcenter()` (shut down), Gradle wrapper 2.2.1.
-- `app`: compileSdk/targetSdk 22, minSdk 16, buildTools 22.0.1, versionName 1.0.5 (code 6), deps use legacy `compile` (appcompat-v7/design 22.2.1, `:volley`).
-- `volley/`: vendored Volley module (Google, Apache 2.0), included via `settings.gradle` (`:app`, `:volley`). Don't edit it; its test sources live in `volley/src/test`.
-- Pure Java, no Kotlin. No tests for `app`. No CI.
-- Modernising means: new wrapper + AGP, `google()`/`mavenCentral()`, `implementation`, AndroidX, replace Volley dep, targetSdk bump (needs `PendingIntent` mutability flags, exact-alarm/background limits, runtime behaviour of `AlarmManager.setRepeating` with RTC, cleartext/network config).
+## Environment constraints
+- The owner has **no local Android SDK or JDK**. Verify everything through GitHub Actions: push, then `gh run list` / `gh run watch <id> --exit-status` / `gh run view <id> --log-failed`. A first-try green build is not guaranteed for new code; iterate on CI logs.
+- Auto-mode may block bulk deletions (`git rm` of many files); ask the user to run them.
+- Commit messages end with the Co-Authored-By trailer from the session attribution reminder.
+
+## Toolchain
+Gradle 8.10.2 (wrapper), AGP 8.7.3, Groovy DSL, compile/target SDK 35, min SDK 26, Java 17, pure Java (no Kotlin). Deps: appcompat, Material 3, WorkManager, OkHttp 4.12, security-crypto 1.1.0-alpha06 (EncryptedSharedPreferences; the library is deprecated upstream but still the simplest option). Tests: JUnit4, org.json (needed so `org.json` works in JVM tests), OkHttp MockWebServer.
 
 ## Architecture (`app/src/main/java/it/darkhelmet67/tado/`)
-- `TadoWidgetProvider` — AppWidgetProvider. Actions: AUTO_UPDATE, REFRESH, NEXT, PREV, CLICK, OPEN_CONFIG. `onUpdate` calls `getCurrentState`, stores `insideTemp`, `setPointTemp`, `operation`, `controlPhase`, then `updateWidget` builds RemoteViews (collection widget via `TadoWidgetService`). Handles resize (`onAppWidgetOptionsChanged`) and text auto-size pref.
-- `TadoWidgetService` — RemoteViewsService/factory rendering page 1 / page 2 (`layout/tado_widget_page_{1,2}.xml`) and "last update" label; values are passed in via intent extras.
-- `ConfigActivity` (~570 lines) — login + device registration UI (declared as the widget's `APPWIDGET_CONFIGURE` activity). Flow: login → `getDevices` (list existing app users) → on save either `claimAppUser` (existing nickname) or `createAppUser` (new); stores device-specific username/password. Also sets update interval and text-size switch.
-- `AppWidgetAlarm` — `AlarmManager.setRepeating(RTC)` broadcasting `AUTO_UPDATE` every N minutes (N from prefs; 0 = manual).
-- `network/` — `VolleyFunctions` (getDevices, claimAppUser, createAppUser, getCurrentState), `CustomRequest`, `JsonObjectRequestStatus`, `VolleyCallback`.
-- `utils/` — `Prefs` (SharedPreferences wrapper; account creds + device creds + update interval + text-size switch), `DLog` (debug logging gated by `R.bool.isDebug`, currently `true`), `UI`.
-- `AutoResizeTextView` — third-party-style auto-fitting TextView.
-- Strings (incl. API URL templates with `%USERNAME`/`%PASSWORD` placeholders) in `res/values/strings.xml`; Italian in `values-it`.
+- `api/TadoApi` — blocking OkHttp client: device-code login (`startDeviceAuth`, `pollToken`), `homes()`, `zones()`, `zoneState()`. Handles token refresh transparently: refresh if <60 s left, retry once on 401, static `REFRESH_LOCK` because **refresh tokens rotate** (reuse = signed out). `invalid_grant` clears the store. Errors map to `TadoException.Kind` (AUTH_EXPIRED, RATE_LIMITED on 429, PENDING/SLOW_DOWN/DENIED/EXPIRED for the login poll, NETWORK, API). Pure Java, no Android classes, so it is unit-testable.
+- `api/ZoneState` — parses zone state JSON; Mode derivation order: OFF, MANUAL (overlay), AWAY, HOME.
+- `auth/` — `TokenStore` interface, `SecureTokenStore` (encrypted prefs), `Tokens`.
+- `widget/AppPrefs` — plain prefs: homeId, zoneId, zone name, interval minutes (default 60, 0 = manual), last `WidgetState` as JSON.
+- `widget/WidgetState` — status (NOT_CONFIGURED, NEEDS_LOGIN, OK, RATE_LIMITED, ERROR) + last values; failed refreshes keep old values via `withStatus`.
+- `widget/RefreshWorker` — one `zoneState` call, saves state, `TadoWidgetProvider.updateAll`. `RefreshScheduler` — periodic (min 15 min, UI offers 30+), one-time (`KEEP`), `refreshIfStale` (5 min guard so adding/rebooting does not burn quota).
+- `widget/TadoWidgetProvider` — RemoteViews rendering from stored state; icon tap → `ConfigActivity`, elsewhere → `ACTION_REFRESH` (or config if setup/login needed). All PendingIntents are `FLAG_IMMUTABLE`.
+- `ConfigActivity` — both the widget configure activity and the LAUNCHER activity. Groups: sign-in → pending (device code, polls on a single-thread executor) → setup (zone + interval spinners). Sets `RESULT_CANCELED` up front so backing out does not place the widget.
+- Resources: single `layout/tado_widget.xml`; strings in `values/` and `values-it/` (keep both in sync); `dimens`/`colors` partly legacy.
 
-## tado° legacy API (`https://my.tado.com`)
-Endpoints under `/mobile/1.6/`: `getAppUsers`, `claimAppUser`, `createAppUser`, `getCurrentState`, all GET/POST with `username` & `password` as **query params**. `getCurrentState` returns JSON with `success`, `insideTemp`, `setPointTemp`, `operation`, `controlPhase`. Whether this API still exists is **unverified** — likely replaced by tado°'s newer OAuth API (`my.tado.com/api/v2`). Don't assume it works.
+## tado° API facts (details in docs/tado-api.md)
+No official API reference exists. Auth: `https://login.tado.com/oauth2/{device_authorize,token}`, public client id `1bb50063-6b0c-4d11-bd99-387f4a91cc46`, scope `offline_access`; access token ~10 min, refresh ≤30 days rotating. Data: `https://my.tado.com/api/v2/{me, homes/{id}/zones, homes/{id}/zones/{id}/state}`. **Free accounts ≈100 requests/day** (429 when exceeded), subscribers ≈20,000 — keep one call per refresh.
 
-## Known issues / gotchas
-- Credentials stored in plaintext SharedPreferences and sent in URLs. `AndroidManifest` has `android:debuggable="true"` (also for release in `build.gradle`) and `isDebug=true`.
-- `appVersion=2.5.0` and `locale=it` are hardcoded in the URL templates.
-- `AppWidgetAlarm` is created per provider instance; stop/start logic may leak alarms.
-- Unused/commented code in `ConfigActivity` (device position prefs).
+## Status / TODO
+- Done: build upgrade, API client, login, widget, settings, tests, CI (`build.yml`), release workflow (`release.yml`, needs signing secrets), docs, privacy policy.
+- Not yet verified on a real device or against the live tado° API (CI only runs unit tests with a mock server). First real-world test should confirm the device flow, the `/me` and zone-state fields, and widget rendering.
+- Open items: `app/*.apk` old release binaries are still tracked in git (suggest moving to GitHub Releases); unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`, arrows) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; LICENSE copyright still credits the tutorial author (“obaro”); possible per-widget zones, humidity, dark theme polish.
 
 ## Repo hygiene — IMPORTANT
-- A local-only folder `misc files/` (git-ignored) holds the owner's **real tado° credentials, API logs and screenshots**. Never read it into commits, never un-ignore it, never quote its contents in docs/issues. The owner was advised to rotate that password.
-- `.gitignore` also excludes `.idea/`, `*.iml`, `.gradle/`, `build/`, `local.properties`.
-- Remote: https://github.com/DarkHelmet67/tado-widget (public, branch `main`). Commit messages end with the Co-Authored-By trailer configured for this session.
-
-## Editor
-VS Code extensions installed for browsing: Java pack (redhat.java etc.), Gradle for Java, XML, Android (adelphes). VS Code can't build this; use Android SDK + old Gradle/JDK 7–8.
+- The owner's real tado° credentials/logs/screenshots are in a local, git-ignored folder (`.private files/`, formerly `misc files/`). Never un-ignore it, read it into commits/docs/issues, or quote it. The owner was advised to rotate that password.
+- Never commit keystores, tokens or `local.properties`. `.gitignore` also excludes `.idea/`, `*.iml`, `.gradle/`, `build/`.

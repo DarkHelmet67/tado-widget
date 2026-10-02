@@ -1,63 +1,61 @@
 # tado° Widget
 
-An unofficial Android home-screen widget that shows the state of your [tado°](https://www.tado.com) smart thermostat at a glance: current room temperature, target temperature, operation mode and control phase, plus the time of the last update.
+An unofficial Android home-screen widget that shows the current temperature, target temperature and mode of one [tado°](https://www.tado.com) heating zone at a glance.
 
-> **Status: legacy / archived-quality.** The widget was written in 2015–2016 against tado°'s old `my.tado.com/mobile/1.6` web services and targets Android API 16–22. That API may no longer work, and the build tooling is very old (see [Building](#building)). Contributions to modernise it are welcome.
+[![Build](https://github.com/DarkHelmet67/tado-widget/actions/workflows/build.yml/badge.svg)](https://github.com/DarkHelmet67/tado-widget/actions/workflows/build.yml)
 
-This project is not affiliated with or endorsed by tado° GmbH.
+> This project is not affiliated with or endorsed by tado° GmbH. It reads data only; it never changes your heating.
 
 ## Features
 
-- Home-screen widget (resizable, two swipeable pages: *Next* / *Previous* buttons)
-- Shows inside temperature, set-point temperature, operation and control phase
-- Configurable refresh: manual, 1, 5, 15, 30 or 60 minutes
-- Tap to refresh manually
-- Optional automatic text resizing when the widget is resized
-- English and Italian UI
+- Room temperature, target temperature, heating indicator and mode icon (home, away, manual override, off), tinted by mode
+- Secure sign-in with tado°'s OAuth device-code login: you approve on tado°'s website and the app never sees your password
+- Choose which home and zone to show
+- Refresh manually (tap the widget) or every 30 minutes to 4 hours
+- English and Italian
 
-## How it works
+## Install
 
-1. When you add the widget, a configuration screen asks for your tado° account email and password.
-2. The app lists the "app users" (devices) already registered on your account, and registers a new one under a nickname you choose (`claimAppUser` / `createAppUser`).
-3. From then on the widget polls `getCurrentState` using that device-specific credential and renders the result.
+Download the latest APK from the [Releases](https://github.com/DarkHelmet67/tado-widget/releases) page, or build it yourself (below). Requires Android 8.0 (API 26) or newer and a tado° account.
+
+Add the widget from your launcher's widget picker, sign in, pick a zone, and save. Tapping the mode icon reopens the settings; tapping anywhere else refreshes.
+
+## About tado°'s request limit
+
+Since 2025 tado° limits free accounts to about **100 API requests per day** (about 20,000 with an Auto-Assist subscription). Every refresh uses one request, so the default is hourly. When the limit is hit the widget keeps the last values and shows "Daily tado° limit reached". Details in [docs/tado-api.md](docs/tado-api.md).
 
 ## Building
 
-Requirements (the versions the project was written for):
-
-- Android SDK platform 22 and build-tools 22.0.1
-- Gradle 2.2.1 (wrapper included) with Android Gradle plugin 1.5.0
-- A JDK compatible with that Gradle version (Java 7/8)
-
-Create `local.properties` with your SDK path (it is git-ignored):
-
-```
-sdk.dir=/path/to/Android/sdk
-```
-
-Then:
+The project builds in GitHub Actions on every push (see `.github/workflows/build.yml`), and the debug APK is attached to each run. To build locally you need JDK 17 and the Android SDK (platform 35); put its path in `local.properties` (`sdk.dir=...`, git-ignored) and run:
 
 ```
 ./gradlew assembleDebug
+./gradlew lintDebug testDebugUnitTest
 ```
 
-Modern Android Studio will refuse to open the project as-is; you'll need to upgrade the Gradle wrapper, the Android Gradle plugin and replace the removed `jcenter()` repository and the `compile` configuration. Doing so is a good first contribution.
+## How it works
 
-## Project layout
+| Part | File |
+|------|------|
+| tado° REST + OAuth client | `app/src/main/java/it/darkhelmet67/tado/api/TadoApi.java` |
+| Encrypted token storage | `auth/SecureTokenStore.java` |
+| Widget rendering and taps | `widget/TadoWidgetProvider.java` |
+| Background refresh (WorkManager) | `widget/RefreshWorker.java`, `RefreshScheduler.java` |
+| Sign-in and settings screen | `ConfigActivity.java` |
 
-| Path | Purpose |
-|------|---------|
-| `app/` | The widget application (package `it.darkhelmet67.tado`) |
-| `volley/` | Bundled copy of Google's [Volley](https://github.com/google/volley) HTTP library |
+More documentation: [tado° API notes](docs/tado-api.md), [releasing and Google Play](docs/releasing.md), [privacy policy](PRIVACY.md), [contributing](CONTRIBUTING.md).
 
-## Privacy and security
+## Version history
 
-Your tado° credentials are entered on-device and sent only to `https://my.tado.com`. Be aware of known limitations in this old code: credentials are stored in plain `SharedPreferences`, and the legacy API takes them as URL query parameters. Don't reuse a password you care about elsewhere.
+- **2.0.0**: rewritten for current Android and tado°'s OAuth/v2 API (the 1.x private mobile API and password login no longer work). One widget layout, one zone, no collection pages.
+- **1.x** (2015–2016): original app using tado°'s private mobile API.
 
-## Contributing
+## Known limitations
 
-Issues and pull requests are welcome. Never commit real credentials, API logs or screenshots containing account details.
+- All widgets show the same zone and settings (per-widget zones are a possible future change).
+- Heating-power and humidity are not shown yet; "sleep" mode from 1.x has no equivalent in the current API data.
+- The app relies on tado°'s shared public OAuth client id and undocumented v2 endpoints, which tado° may change.
 
 ## License
 
-MIT, see [LICENSE](LICENSE). The widget skeleton originated from the *SimpleAndroidWidget* tutorial sample; Volley is licensed under Apache 2.0.
+MIT, see [LICENSE](LICENSE). The widget originated from the *SimpleAndroidWidget* tutorial sample.
