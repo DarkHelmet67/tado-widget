@@ -17,6 +17,7 @@ public class SecureTokenStore implements TokenStore {
 
     private final Context context;
     private SharedPreferences prefs;
+    private volatile String lastError;
 
     public SecureTokenStore(Context context) {
         this.context = context.getApplicationContext();
@@ -33,6 +34,7 @@ public class SecureTokenStore implements TokenStore {
                         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
             } catch (Exception e) {
                 Log.e(TAG, "Secure storage unavailable", e);
+                lastError = e.getClass().getSimpleName() + ": " + e.getMessage();
             }
         }
         return prefs;
@@ -49,6 +51,7 @@ public class SecureTokenStore implements TokenStore {
             return new Tokens(access, refresh, p.getLong(KEY_EXPIRES, 0));
         } catch (RuntimeException e) {
             Log.e(TAG, "Could not read tokens", e);
+            lastError = e.getClass().getSimpleName() + ": " + e.getMessage();
             return null;
         }
     }
@@ -62,6 +65,11 @@ public class SecureTokenStore implements TokenStore {
                 .putString(KEY_REFRESH, tokens.refreshToken)
                 .putLong(KEY_EXPIRES, tokens.expiresAtMillis)
                 .apply();
+    }
+
+    @Override
+    public String lastError() {
+        return lastError;
     }
 
     @Override

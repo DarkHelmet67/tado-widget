@@ -164,4 +164,24 @@ public class TadoApiTest {
         assertEquals(18.4, state.insideTemp, 0.001);
         assertEquals("/api/v2/homes/42/zones/7/state", server.takeRequest().getPath());
     }
+
+    @Test
+    public void approvedLoginThatCannotBeStoredIsAnError() throws Exception {
+        TokenStore broken = new TokenStore() {
+            @Override public Tokens load() { return null; }
+            @Override public void save(Tokens t) { }
+            @Override public void clear() { }
+            @Override public String lastError() { return "keystore broken"; }
+        };
+        String base = server.url("/").toString().replaceAll("/$", "");
+        TadoApi brokenApi = new TadoApi(new OkHttpClient(), base, base + "/api/v2", broken);
+        server.enqueue(json(200, "{\"access_token\":\"a\",\"refresh_token\":\"r\",\"expires_in\":600}"));
+        try {
+            brokenApi.pollToken("dc");
+            fail("expected storage error");
+        } catch (TadoException e) {
+            assertEquals(TadoException.Kind.API, e.kind);
+            assertTrue(e.getMessage().contains("keystore broken"));
+        }
+    }
 }

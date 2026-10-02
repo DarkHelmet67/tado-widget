@@ -56,7 +56,8 @@ public class ConfigActivity extends AppCompatActivity {
         }
     }
 
-    private final ExecutorService io = Executors.newSingleThreadExecutor();
+    private static final Object POLL_LOCK = new Object();
+    private final ExecutorService io = Executors.newCachedThreadPool();
     private final Handler ui = new Handler(Looper.getMainLooper());
     private final List<ZoneChoice> choices = new ArrayList<>();
     private volatile boolean loginCancelled;
@@ -114,6 +115,7 @@ public class ConfigActivity extends AppCompatActivity {
 
         findViewById(R.id.buttonSignIn).setOnClickListener(v -> startLogin());
         buttonOpenLogin.setOnClickListener(v -> openLoginPage());
+        findViewById(R.id.buttonCheckLogin).setOnClickListener(v -> checkLoginNow(true));
         findViewById(R.id.buttonCancelLogin).setOnClickListener(v -> cancelLogin());
         findViewById(R.id.buttonSave).setOnClickListener(v -> save());
         findViewById(R.id.buttonSignOut).setOnClickListener(v -> signOut());
@@ -175,10 +177,11 @@ public class ConfigActivity extends AppCompatActivity {
                 Thread.sleep(intervalMillis);
                 if (loginCancelled) return;
                 try {
-                    api.pollToken(auth.deviceCode);
-                    prefs.clearPendingLogin();
-                    ui.post(this::loadZones);
-                    return;
+                    if (pollOnce(auth.deviceCode)) {
+                        prefs.clearPendingLogin();
+                        ui.post(this::loadZones);
+                        return;
+                    }
                 } catch (TadoException e) {
                     if (e.kind == TadoException.Kind.SLOW_DOWN) {
                         intervalMillis += 5000;
@@ -199,6 +202,53 @@ public class ConfigActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    /**
+     * Asks tado° once whether the login was approved. Serialised so that several screens or threads
+     * never use the same device code twice.
+     *
+     * @return true once signed in, false while approval is still pending
+     */
+    private boolean pollOnce(String deviceCode) throws TadoException {
+        synchronized (POLL_LOCK) {
+            if (api.isSignedIn()) return true;
+            try {
+                api.pollToken(deviceCode);
+                return true;
+            } catch (TadoException e) {
+                if (e.kind == TadoException.Kind.PENDING) return false;
+                throw e;
+            }
+        }
+    }
+
+    /** One immediate check, used by the Continue button and when returning from the browser. */
+    private void checkLoginNow(boolean userInitiated) {
+        String[] pending = prefs.getPendingLogin();
+        if (pending == null && !api.isSignedIn()) return;
+        if (userInitiated) textStatus.setText(R.string.status_checking);
+        io.execute(() -> {
+            try {
+                boolean done = api.isSignedIn() || (pending != null && pollOnce(pending[0]));
+                if (done) {
+                    prefs.clearPendingLogin();
+                    ui.post(this::loadZones);
+                } else if (userInitiated) {
+                    ui.post(() -> textStatus.setText(R.string.status_not_approved_yet));
+                }
+            } catch (TadoException e) {
+                prefs.clearPendingLogin();
+                ui.post(() -> fail(e));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Coming back from the browser: do not wait for the next background poll.
+        if (groupPending.getVisibility() == View.VISIBLE) checkLoginNow(false);
     }
 
     private void openLoginPage() {
@@ -289,6 +339,7 @@ public class ConfigActivity extends AppCompatActivity {
             case NETWORK: message = R.string.error_network; break;
             default: message = R.string.error_generic; break;
         }
+        if (e.kind == TadoException.Kind.AUTH_EXPIRED && api.isSignedIn()) return; // another poll won
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         // Keep the technical reason on screen so problems can be reported.
         textStatus.setText(getString(message) + " (" + e.kind + ": " + e.getMessage() + ")");

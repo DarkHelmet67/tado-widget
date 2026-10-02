@@ -8,4 +8,9 @@ public interface TokenStore {
     void save(Tokens tokens);
 
     void clear();
+
+    /** @return a description of the last storage failure, or null */
+    default String lastError() {
+        return null;
+    }
 }

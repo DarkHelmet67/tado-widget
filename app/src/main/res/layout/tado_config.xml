@@ -66,6 +66,12 @@
                 android:text="@string/action_open_login" />
 
             <Button
+                android:id="@+id/buttonCheckLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_check_login" />
+
+            <Button
                 android:id="@+id/buttonCancelLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

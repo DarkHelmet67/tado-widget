@@ -82,6 +82,10 @@ public class TadoApi {
                 .build();
         Tokens tokens = parseTokens(execute(tokenRequest(form)), null);
         store.save(tokens);
+        if (store.load() == null) {
+            // Login worked but the tokens cannot be kept: do not pretend the user is signed in.
+            throw new TadoException(TadoException.Kind.API, "Could not store the login: " + store.lastError());
+        }
         return tokens;
     }
 
@@ -190,13 +194,13 @@ public class TadoApi {
         try (Response response = http.newCall(request).execute()) {
             String body = response.body() == null ? "" : response.body().string();
             if (response.isSuccessful()) return body;
-            throw mapError(response.code(), body);
+            throw mapError(response.code(), body, response.request().url().encodedPath());
         } catch (IOException e) {
             throw new TadoException(TadoException.Kind.NETWORK, "Network error", e);
         }
     }
 
-    private static TadoException mapError(int status, String body) {
+    private static TadoException mapError(int status, String body, String path) {
         String error = "";
         try {
             error = new JSONObject(body).optString("error");
@@ -213,6 +217,7 @@ public class TadoApi {
         }
         if (status == 429) return new TadoException(TadoException.Kind.RATE_LIMITED, "Rate limited");
         if (status == 401) return new TadoException(TadoException.Kind.AUTH_EXPIRED, "Unauthorized");
-        return new TadoException(TadoException.Kind.API, "HTTP " + status);
+        String snippet = body.length() > 200 ? body.substring(0, 200) : body;
+        return new TadoException(TadoException.Kind.API, "HTTP " + status + " " + path + " " + snippet);
     }
 }
