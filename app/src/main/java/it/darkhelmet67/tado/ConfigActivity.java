@@ -155,6 +155,7 @@ public class ConfigActivity extends AppCompatActivity {
     // ---- Sign-in (device-code flow) ----
 
     private void startLogin() {
+        AppLog.d("LOGIN", "start");
         loginCancelled = false;
         textStatus.setText(R.string.status_contacting);
         io.execute(() -> {
@@ -184,6 +185,7 @@ public class ConfigActivity extends AppCompatActivity {
                 if (loginCancelled) return;
                 try {
                     if (pollOnce(auth.deviceCode)) {
+                        AppLog.d("LOGIN", "approved");
                         prefs.clearPendingLogin();
                         ui.post(this::loadZones);
                         return;
@@ -374,6 +376,7 @@ public class ConfigActivity extends AppCompatActivity {
     // ---- Helpers ----
 
     private void fail(TadoException e) {
+        AppLog.d("LOGIN", "error " + e.kind + ": " + e.getMessage());
         int message;
         switch (e.kind) {
             case DENIED: message = R.string.error_login_denied; break;

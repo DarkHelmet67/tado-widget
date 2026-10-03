@@ -23,6 +23,8 @@ public class ZoneStateTest {
         assertEquals(21.5, s.targetTemp, 0.001);
         assertEquals(ZoneState.Mode.HOME, s.mode);
         assertTrue(s.heating);
+        assertEquals(45.0, s.humidity, 0.001);
+        assertEquals(60.0, s.heatingPower, 0.001);
     }
 
     @Test
@@ -56,5 +58,7 @@ public class ZoneStateTest {
         assertNull(s.targetTemp);
         assertEquals(ZoneState.Mode.HOME, s.mode);
         assertFalse(s.heating);
+        assertNull(s.humidity);
+        assertNull(s.heatingPower);
     }
 }
