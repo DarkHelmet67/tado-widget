@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -38,8 +39,12 @@ public class TadoApi {
     private final String apiBase;
     private final TokenStore store;
 
-    public TadoApi(TokenStore store) {
-        this(new OkHttpClient(), DEFAULT_AUTH_BASE, DEFAULT_API_BASE, store);
+    public TadoApi(TokenStore store, NetworkLog log) {
+        this(new OkHttpClient.Builder()
+                .addInterceptor(new LoggingInterceptor(log))
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .build(), DEFAULT_AUTH_BASE, DEFAULT_API_BASE, store);
     }
 
     public TadoApi(OkHttpClient http, String authBase, String apiBase, TokenStore store) {

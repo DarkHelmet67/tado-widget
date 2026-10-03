@@ -12,12 +12,19 @@ public final class ZoneState {
     public final Double targetTemp;
     public final Mode mode;
     public final boolean heating;
+    /** Relative humidity in percent, or null. */
+    public final Double humidity;
+    /** Heating power in percent (0-100), or null. */
+    public final Double heatingPower;
 
-    public ZoneState(Double insideTemp, Double targetTemp, Mode mode, boolean heating) {
+    public ZoneState(Double insideTemp, Double targetTemp, Mode mode, boolean heating,
+                     Double humidity, Double heatingPower) {
         this.insideTemp = insideTemp;
         this.targetTemp = targetTemp;
         this.mode = mode;
         this.heating = heating;
+        this.humidity = humidity;
+        this.heatingPower = heatingPower;
     }
 
     public static ZoneState fromJson(JSONObject json) {
@@ -35,9 +42,17 @@ public final class ZoneState {
 
         JSONObject activity = json.optJSONObject("activityDataPoints");
         JSONObject heatingPower = activity == null ? null : activity.optJSONObject("heatingPower");
-        boolean heating = heatingPower != null && heatingPower.optDouble("percentage", 0) > 0;
+        Double power = percentage(heatingPower);
+        boolean heating = power != null && power > 0;
+        JSONObject sensors = json.optJSONObject("sensorDataPoints");
+        Double humidity = sensors == null ? null : percentage(sensors.optJSONObject("humidity"));
 
-        return new ZoneState(inside, target, mode, heating);
+        return new ZoneState(inside, target, mode, heating, humidity, power);
+    }
+
+    private static Double percentage(JSONObject point) {
+        if (point == null || !point.has("percentage") || point.isNull("percentage")) return null;
+        return point.optDouble("percentage");
     }
 
     private static Double celsius(JSONObject parent, String key) {

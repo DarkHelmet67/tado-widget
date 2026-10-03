@@ -4,6 +4,13 @@
 
     <string name="label_last_update">Aggiornato</string>
     <string name="label_heating">Riscaldamento</string>
+    <string name="label_humidity">Umidità</string>
+    <string name="label_heating_power">Potenza riscaldamento</string>
+    <string name="action_next_page">Cambia pagina</string>
+    <string name="status_refreshing">Aggiornamento…</string>
+    <string name="action_share_log">Condividi log</string>
+    <string name="log_location">Cartella log: %1$s</string>
+    <string name="error_log_export">Impossibile preparare il log.</string>
     <string name="action_open_settings">Apri impostazioni</string>
     <string name="status_not_configured">Tocca per configurare</string>
     <string name="status_needs_login">Tocca per accedere</string>

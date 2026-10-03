@@ -55,6 +55,19 @@ public class AppPrefs {
         prefs.edit().putInt(KEY_INTERVAL, minutes).apply();
     }
 
+    /** Which page (0 = temperatures, 1 = humidity and heating power) a widget shows. */
+    public int getPage(int widgetId) {
+        return prefs.getInt("page_" + widgetId, 0);
+    }
+
+    public void setPage(int widgetId, int page) {
+        prefs.edit().putInt("page_" + widgetId, page).apply();
+    }
+
+    public void removePage(int widgetId) {
+        prefs.edit().remove("page_" + widgetId).apply();
+    }
+
     public WidgetState getState() {
         return WidgetState.fromJson(prefs.getString(KEY_STATE, null));
     }

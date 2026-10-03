@@ -15,9 +15,13 @@
         android:scaleType="fitXY"
         android:src="@drawable/shape_rounded_corners" />
 
+    <!-- Page 1: mode icon, room temperature, target temperature -->
     <LinearLayout
+        android:id="@+id/pageMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/widget_arrow_width"
+        android:layout_marginEnd="@dimen/widget_arrow_width"
         android:orientation="horizontal">
 
         <ImageView
@@ -73,11 +77,107 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Page 2: mode icon, humidity, heating power -->
+    <LinearLayout
+        android:id="@+id/pageDetails"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/widget_arrow_width"
+        android:layout_marginEnd="@dimen/widget_arrow_width"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageViewIcon2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:contentDescription="@string/action_open_settings"
+            android:padding="@dimen/widget_padding"
+            android:scaleType="centerInside"
+            android:src="@drawable/house_bar_white" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewHumidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="--"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/label_humidity"
+                android:textColor="@color/whiteAlpha75"
+                android:textSize="@dimen/text_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewHeatingPower"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="--"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_normal_max"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/label_heating_power"
+                android:textColor="@color/whiteAlpha75"
+                android:textSize="@dimen/text_small" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewArrowLeft"
+        android:layout_width="@dimen/widget_arrow_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:alpha="0.6"
+        android:contentDescription="@string/action_next_page"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_arrow_left_white" />
+
+    <ImageView
+        android:id="@+id/imageViewArrowRight"
+        android:layout_width="@dimen/widget_arrow_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:alpha="0.6"
+        android:contentDescription="@string/action_next_page"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_arrow_right_white" />
+
     <TextView
         android:id="@+id/textViewLastUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/widget_arrow_width"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/whiteAlpha75"

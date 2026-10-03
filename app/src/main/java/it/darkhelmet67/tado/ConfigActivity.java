@@ -2,6 +2,9 @@ package it.darkhelmet67.tado;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ActivityNotFoundException;
+import androidx.core.content.FileProvider;
+import java.io.File;
+import java.io.IOException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +30,7 @@ import it.darkhelmet67.tado.api.TadoApi;
 import it.darkhelmet67.tado.api.TadoException;
 import it.darkhelmet67.tado.api.Zone;
 import it.darkhelmet67.tado.auth.SecureTokenStore;
+import it.darkhelmet67.tado.util.AppLog;
 import it.darkhelmet67.tado.widget.AppPrefs;
 import it.darkhelmet67.tado.widget.RefreshScheduler;
 import it.darkhelmet67.tado.widget.TadoWidgetProvider;
@@ -84,7 +88,7 @@ public class ConfigActivity extends AppCompatActivity {
         setContentView(R.layout.tado_config);
 
         tokens = new SecureTokenStore(this);
-        api = new TadoApi(tokens);
+        api = new TadoApi(tokens, AppLog.network());
         prefs = new AppPrefs(this);
 
         Bundle extras = getIntent().getExtras();
@@ -117,6 +121,8 @@ public class ConfigActivity extends AppCompatActivity {
         buttonOpenLogin.setOnClickListener(v -> openLoginPage());
         findViewById(R.id.buttonCheckLogin).setOnClickListener(v -> checkLoginNow(true));
         findViewById(R.id.buttonCancelLogin).setOnClickListener(v -> cancelLogin());
+        findViewById(R.id.buttonShareLog).setOnClickListener(v -> shareLog());
+        ((TextView) findViewById(R.id.textLogLocation)).setText(getString(R.string.log_location, AppLog.location()));
         findViewById(R.id.buttonSave).setOnClickListener(v -> save());
         findViewById(R.id.buttonSignOut).setOnClickListener(v -> signOut());
 
@@ -255,6 +261,23 @@ public class ConfigActivity extends AppCompatActivity {
         super.onResume();
         // Coming back from the browser: do not wait for the next background poll.
         if (groupPending.getVisibility() == View.VISIBLE) checkLoginNow(false);
+    }
+
+    private void shareLog() {
+        io.execute(() -> {
+            try {
+                File export = AppLog.export();
+                android.net.Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".logs", export);
+                Intent send = new Intent(Intent.ACTION_SEND)
+                        .setType("text/plain")
+                        .putExtra(Intent.EXTRA_STREAM, uri)
+                        .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " log")
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                ui.post(() -> startActivity(Intent.createChooser(send, getString(R.string.action_share_log))));
+            } catch (IOException | RuntimeException e) {
+                ui.post(() -> Toast.makeText(this, R.string.error_log_export, Toast.LENGTH_LONG).show());
+            }
+        });
     }
 
     private void openLoginPage() {

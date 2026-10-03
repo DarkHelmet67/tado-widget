@@ -10,6 +10,7 @@ import it.darkhelmet67.tado.api.TadoApi;
 import it.darkhelmet67.tado.api.TadoException;
 import it.darkhelmet67.tado.api.ZoneState;
 import it.darkhelmet67.tado.auth.SecureTokenStore;
+import it.darkhelmet67.tado.util.AppLog;
 
 /** Fetches the configured zone's state (one API call) and redraws the widgets. */
 public class RefreshWorker extends Worker {
@@ -21,10 +22,17 @@ public class RefreshWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Context context = getApplicationContext();
-        AppPrefs prefs = new AppPrefs(context);
-        SecureTokenStore tokens = new SecureTokenStore(context);
+        refresh(getApplicationContext());
+        return Result.success();
+    }
+
+    /** Blocking refresh, shared by the periodic worker and the tap-to-refresh path. */
+    public static void refresh(Context context) {
+        Context app = context.getApplicationContext();
+        AppPrefs prefs = new AppPrefs(app);
+        SecureTokenStore tokens = new SecureTokenStore(app);
         WidgetState last = prefs.getState();
+        AppLog.d("REFRESH", "start");
 
         WidgetState next;
         if (tokens.load() == null) {
@@ -32,25 +40,39 @@ public class RefreshWorker extends Worker {
         } else if (!prefs.hasZone()) {
             next = last.withStatus(WidgetState.Status.NOT_CONFIGURED);
         } else {
-            try {
-                ZoneState zone = new TadoApi(tokens).zoneState(prefs.getHomeId(), prefs.getZoneId());
-                next = WidgetState.fromZone(zone, System.currentTimeMillis());
-            } catch (TadoException e) {
-                switch (e.kind) {
-                    case AUTH_EXPIRED:
-                        next = last.withStatus(WidgetState.Status.NEEDS_LOGIN);
+            TadoApi api = new TadoApi(tokens, AppLog.network());
+            ZoneState zone = null;
+            TadoException failure = null;
+            // Mobile networks often need a moment (e.g. right after waking up): retry network errors once.
+            for (int attempt = 1; attempt <= 2; attempt++) {
+                try {
+                    zone = api.zoneState(prefs.getHomeId(), prefs.getZoneId());
+                    failure = null;
+                    break;
+                } catch (TadoException e) {
+                    failure = e;
+                    if (e.kind != TadoException.Kind.NETWORK) break;
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
                         break;
-                    case RATE_LIMITED:
-                        next = last.withStatus(WidgetState.Status.RATE_LIMITED);
-                        break;
-                    default:
-                        next = last.withStatus(WidgetState.Status.ERROR);
-                        break;
+                    }
                 }
             }
+            if (zone != null) {
+                next = WidgetState.fromZone(zone, System.currentTimeMillis());
+            } else if (failure != null && failure.kind == TadoException.Kind.AUTH_EXPIRED) {
+                next = last.withStatus(WidgetState.Status.NEEDS_LOGIN);
+            } else if (failure != null && failure.kind == TadoException.Kind.RATE_LIMITED) {
+                next = last.withStatus(WidgetState.Status.RATE_LIMITED);
+            } else {
+                next = last.withStatus(WidgetState.Status.ERROR);
+            }
+            if (failure != null) AppLog.d("REFRESH", "failed: " + failure.kind + " " + failure.getMessage());
         }
+        AppLog.d("REFRESH", "result " + next.status);
         prefs.setState(next);
-        TadoWidgetProvider.updateAll(context);
-        return Result.success();
+        TadoWidgetProvider.updateAll(app);
     }
 }

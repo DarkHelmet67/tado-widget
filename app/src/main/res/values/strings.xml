@@ -6,6 +6,13 @@
     <!-- Widget -->
     <string name="label_last_update">Updated</string>
     <string name="label_heating">Heating</string>
+    <string name="label_humidity">Humidity</string>
+    <string name="label_heating_power">Heating power</string>
+    <string name="action_next_page">Switch page</string>
+    <string name="status_refreshing">Updating…</string>
+    <string name="action_share_log">Share log</string>
+    <string name="log_location">Log folder: %1$s</string>
+    <string name="error_log_export">Could not prepare the log.</string>
     <string name="action_open_settings">Open settings</string>
     <string name="status_not_configured">Tap to set up</string>
     <string name="status_needs_login">Tap to sign in</string>
