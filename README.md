@@ -13,7 +13,11 @@ An unofficial Android home-screen widget that shows the current temperature, tar
 - Choose which home and zone to show
 - Two pages (switch with the arrows): temperatures, then humidity and heating power
 - Refresh manually (tap the widget) or every 30 minutes to 4 hours
-- English and Italian
+- English and Italian, following the phone's language
+
+## Quick start
+
+Add the widget, tap **Sign in with tado°**, approve in the browser, pick a zone, **Save**. Full walkthrough and troubleshooting: [user guide](docs/user-guide.md) ([Italiano](docs/user-guide.it.md)).
 
 ## Install
 
@@ -52,10 +56,11 @@ Some phones block network access for apps that are not on screen (Data Saver, "r
 | Background refresh (WorkManager) | `widget/RefreshWorker.java`, `RefreshScheduler.java` |
 | Sign-in and settings screen | `ConfigActivity.java` |
 
-More documentation: [tado° API notes](docs/tado-api.md), [releasing and Google Play](docs/releasing.md), [privacy policy](PRIVACY.md), [contributing](CONTRIBUTING.md).
+More documentation: [user guide](docs/user-guide.md), [guida in italiano](docs/user-guide.it.md), [tado° API notes](docs/tado-api.md), [releasing and Google Play](docs/releasing.md), [privacy policy](PRIVACY.md), [contributing](CONTRIBUTING.md).
 
 ## Version history
 
+- **2.2**: first public release. Language follows the phone (Italian, otherwise English; per-app language on Android 13+), a note on the Share log button, quick user guides ([English](docs/user-guide.md), [Italiano](docs/user-guide.it.md)), string-parity test.
 - **2.1.1**: refreshes that fail because Android blocks background network access are retried by WorkManager; the log records the restriction (Data Saver, battery, standby bucket); settings show a warning and a shortcut to allow background access; zones are loaded once after sign-in.
 - **2.1.0**: tap refreshes immediately with an "Updating…" state; second page (arrows) with humidity and heating power; network log with a Share button; network errors retried once.
 - **2.0.3**: a temporary network error while returning from the browser no longer cancels the sign-in; loading zones retries.

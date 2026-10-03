@@ -7,4 +7,4 @@ Thanks for helping! This is a small Java Android app (see [README](README.md) an
 - **Tests:** API and parsing code is plain Java and tested with JUnit and MockWebServer. Please add a test with a change.
 - **Never commit secrets:** no passwords, tokens, keystores, or logs/screenshots showing account data.
 - **Docs:** update the README, `docs/` and `CLAUDE.md` when behaviour or architecture changes.
-- **Translations:** add `values-xx/strings.xml`; strings marked `translatable="false"` stay untranslated.
+- **Translations:** English is the default (`values/`), Italian is `values-it/`. Every translatable string must exist in both (`StringsParityTest` enforces it). To add a language create `values-xx/strings.xml`, list it in `res/xml/locales_config.xml` and in `localeFilters` in `app/build.gradle`, and translate the user guide. The app follows the phone's language and falls back to English.

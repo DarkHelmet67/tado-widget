@@ -27,6 +27,9 @@ Gradle 8.10.2 (wrapper), AGP 8.7.3, Groovy DSL, compile/target SDK 35, min SDK 2
 ## tado° API facts (details in docs/tado-api.md)
 No official API reference exists. Auth: `https://login.tado.com/oauth2/{device_authorize,token}`, public client id `1bb50063-6b0c-4d11-bd99-387f4a91cc46`, scope `offline_access`; access token ~10 min, refresh ≤30 days rotating. Data: `https://my.tado.com/api/v2/{me, homes/{id}/zones, homes/{id}/zones/{id}/state}`. **Free accounts ≈100 requests/day** (429 when exceeded), subscribers ≈20,000 — keep one call per refresh.
 
+## Localisation
+English is the default (`values/strings.xml`), Italian `values-it/`. The app follows the OS locale (Italian devices -> Italian, anything else -> English); `res/xml/locales_config.xml` + `android:localeConfig` give Android 13+ a per-app language picker, `androidResources.localeFilters` ships only en/it. `StringsParityTest` fails if a translatable string is missing in either file. Technical error details in the status line (`kind: message`) stay English on purpose (for bug reports). User guides: `docs/user-guide.md` and `docs/user-guide.it.md` - keep both in sync with the UI.
+
 ## Logging
 `util/AppLog` (init in `TadoApp`) writes through `util/RotatingFileLog` (pure Java, tested) to `getExternalFilesDir/logs/tado-widget.log` (256 KB x 3 files). `api/LoggingInterceptor` logs `METHOD host/path -> status ms` (never the query string, headers or success bodies; error bodies truncated to 200 chars). The settings screen has **Share log** (FileProvider `${applicationId}.logs`, combines files into `tado-widget-log-export.txt`). Never log tokens, device codes or credentials.
 
@@ -43,9 +46,10 @@ Tap -> `ACTION_REFRESH` handled with `goAsync()` + a thread (not WorkManager) so
 
 ## Status / TODO
 - Done: build upgrade, API client, login, widget, settings, tests, CI (`build.yml`), release workflow (`release.yml`, needs signing secrets), docs, privacy policy.
-- Not yet verified on a real device or against the live tado° API (CI only runs unit tests with a mock server). First real-world test should confirm the device flow, the `/me` and zone-state fields, and widget rendering.
-- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.1.1` / code 12.
-- Open items: unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`, arrows) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; LICENSE copyright still credits the tutorial author (“obaro”); possible per-widget zones, humidity, dark theme polish.
+- Verified on a real phone (2.1.1+): login, zone state, widget pages, refresh, log sharing. 2.2 is the first public release. Play Store publishing notes live in the owner's git-ignored `.private files/play-store-guide.md`.
+- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.2` / code 13.
+- Open items: unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; possible per-widget zones, dark theme polish.
+- LICENSE keeps the original tutorial author's notice (obaro, 2015) and adds the owner's.
 
 ## Repo hygiene — IMPORTANT
 - The owner's real tado° credentials/logs/screenshots are in a local, git-ignored folder (`.private files/`, formerly `misc files/`). Never un-ignore it, read it into commits/docs/issues, or quote it. The owner was advised to rotate that password.

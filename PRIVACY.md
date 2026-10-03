@@ -8,6 +8,10 @@
 - The app stores an access token and a refresh token on your device, encrypted with a key held in the Android Keystore, plus the home/zone you chose and the last temperature values it fetched.
 - The app talks only to `login.tado.com` and `my.tado.com` to read the temperature of the zone you selected. It does not control your heating.
 
+**Debug log**
+
+The app keeps a small rotating log on your device (request paths, status codes, timings, app events; never passwords, tokens or response contents). It leaves the device only if you press "Share log" and choose where to send it, for example to the developer when reporting a problem.
+
 **What the app does not do**
 
 - It has no servers, analytics, advertising or crash reporting, and it sends nothing to the developer or any third party.
