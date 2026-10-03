@@ -51,5 +51,6 @@
     <string name="error_no_zones">No zones found in your tado° account.</string>
     <string name="error_rate_limited">tado° daily request limit reached. Try again later.</string>
     <string name="error_network">Could not reach tado°. Check your connection.</string>
+    <string name="error_network_retry">No connection to tado° right now. Try again in a moment.</string>
     <string name="error_generic">Something went wrong talking to tado°.</string>
 </resources>

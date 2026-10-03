@@ -196,7 +196,7 @@ public class TadoApi {
             if (response.isSuccessful()) return body;
             throw mapError(response.code(), body, response.request().url().encodedPath());
         } catch (IOException e) {
-            throw new TadoException(TadoException.Kind.NETWORK, "Network error", e);
+            throw new TadoException(TadoException.Kind.NETWORK, "Network error: " + e, e);
         }
     }
 

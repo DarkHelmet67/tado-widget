@@ -40,5 +40,6 @@
     <string name="error_no_zones">Nessuna zona trovata nel tuo account tado°.</string>
     <string name="error_rate_limited">Limite giornaliero di richieste tado° raggiunto. Riprova più tardi.</string>
     <string name="error_network">Impossibile raggiungere tado°. Controlla la connessione.</string>
+    <string name="error_network_retry">Nessuna connessione a tado° al momento. Riprova tra un attimo.</string>
     <string name="error_generic">Qualcosa è andato storto con tado°.</string>
 </resources>

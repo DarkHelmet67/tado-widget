@@ -28,12 +28,12 @@ Gradle 8.10.2 (wrapper), AGP 8.7.3, Groovy DSL, compile/target SDK 35, min SDK 2
 No official API reference exists. Auth: `https://login.tado.com/oauth2/{device_authorize,token}`, public client id `1bb50063-6b0c-4d11-bd99-387f4a91cc46`, scope `offline_access`; access token ~10 min, refresh ≤30 days rotating. Data: `https://my.tado.com/api/v2/{me, homes/{id}/zones, homes/{id}/zones/{id}/state}`. **Free accounts ≈100 requests/day** (429 when exceeded), subscribers ≈20,000 — keep one call per refresh.
 
 ## Debugging the login on a device (no adb available to the owner)
-`ConfigActivity.fail()` prints `<message> (<kind>: <detail>)` in the status line; API errors include HTTP status, path and a body snippet; `SecureTokenStore.lastError()` explains Keystore failures (a login that cannot be stored raises an API error instead of silently looking signed-out). Tado's live endpoints were checked with curl: `device_authorize` returns user code + `verification_uri_complete`, and polling `token` returns 400 `authorization_pending` as implemented.
+`ConfigActivity.fail()` prints `<message> (<kind>: <detail>)` in the status line; API errors include HTTP status, path and a body snippet; `SecureTokenStore.lastError()` explains Keystore failures (a login that cannot be stored raises an API error instead of silently looking signed-out). Found on a real phone: a transient NETWORK error right after returning from the browser used to cancel the login; NETWORK is now treated as retryable in the poll loop, the one-off check and `loadZones`. Tado's live endpoints were checked with curl: `device_authorize` returns user code + `verification_uri_complete`, and polling `token` returns 400 `authorization_pending` as implemented.
 
 ## Status / TODO
 - Done: build upgrade, API client, login, widget, settings, tests, CI (`build.yml`), release workflow (`release.yml`, needs signing secrets), docs, privacy policy.
 - Not yet verified on a real device or against the live tado° API (CI only runs unit tests with a mock server). First real-world test should confirm the device flow, the `/me` and zone-state fields, and widget rendering.
-- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.0.2` / code 9.
+- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.0.3` / code 10.
 - Open items: unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`, arrows) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; LICENSE copyright still credits the tutorial author (“obaro”); possible per-widget zones, humidity, dark theme polish.
 
 ## Repo hygiene — IMPORTANT

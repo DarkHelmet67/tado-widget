@@ -47,6 +47,7 @@ More documentation: [tado° API notes](docs/tado-api.md), [releasing and Google 
 
 ## Version history
 
+- **2.0.3**: a temporary network error while returning from the browser no longer cancels the sign-in; loading zones retries.
 - **2.0.2**: sign-in can be continued with a button or by returning to the app, and shows the real error if the login cannot be completed or stored.
 - **2.0.1**: sign-in survives the settings screen being recreated, clearer errors and user-code instructions.
 - **2.0**: rewritten for current Android and tado°'s OAuth/v2 API (the 1.x private mobile API and password login no longer work). One widget layout, one zone, no collection pages.

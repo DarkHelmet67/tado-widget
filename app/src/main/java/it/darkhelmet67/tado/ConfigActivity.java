@@ -185,7 +185,8 @@ public class ConfigActivity extends AppCompatActivity {
                 } catch (TadoException e) {
                     if (e.kind == TadoException.Kind.SLOW_DOWN) {
                         intervalMillis += 5000;
-                    } else if (e.kind != TadoException.Kind.PENDING) {
+                    } else if (e.kind != TadoException.Kind.PENDING && e.kind != TadoException.Kind.NETWORK) {
+                        // NETWORK is transient (e.g. right after returning from the browser): keep polling.
                         prefs.clearPendingLogin();
                         ui.post(() -> fail(e));
                         return;
@@ -238,8 +239,13 @@ public class ConfigActivity extends AppCompatActivity {
                     ui.post(() -> textStatus.setText(R.string.status_not_approved_yet));
                 }
             } catch (TadoException e) {
-                prefs.clearPendingLogin();
-                ui.post(() -> fail(e));
+                if (e.kind == TadoException.Kind.NETWORK) {
+                    // Keep the pending login: the background poll or another tap can still finish it.
+                    if (userInitiated) ui.post(() -> textStatus.setText(R.string.error_network_retry));
+                } else {
+                    prefs.clearPendingLogin();
+                    ui.post(() -> fail(e));
+                }
             }
         });
     }
@@ -271,18 +277,32 @@ public class ConfigActivity extends AppCompatActivity {
     private void loadZones() {
         textStatus.setText(R.string.status_loading_zones);
         io.execute(() -> {
-            try {
-                List<ZoneChoice> found = new ArrayList<>();
-                List<Home> homes = api.homes();
-                for (Home home : homes) {
-                    for (Zone zone : api.zones(home.id)) {
-                        String label = homes.size() > 1 ? home.name + " · " + zone.name : zone.name;
-                        found.add(new ZoneChoice(home.id, zone.id, label));
+            // The network is often not ready right after coming back from the browser: retry a few times.
+            for (int attempt = 1; ; attempt++) {
+                try {
+                    List<ZoneChoice> found = new ArrayList<>();
+                    List<Home> homes = api.homes();
+                    for (Home home : homes) {
+                        for (Zone zone : api.zones(home.id)) {
+                            String label = homes.size() > 1 ? home.name + " · " + zone.name : zone.name;
+                            found.add(new ZoneChoice(home.id, zone.id, label));
+                        }
                     }
+                    ui.post(() -> showZones(found));
+                    return;
+                } catch (TadoException e) {
+                    if (e.kind == TadoException.Kind.NETWORK && attempt < 4) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            return;
+                        }
+                        continue;
+                    }
+                    ui.post(() -> fail(e));
+                    return;
                 }
-                ui.post(() -> showZones(found));
-            } catch (TadoException e) {
-                ui.post(() -> fail(e));
             }
         });
     }
