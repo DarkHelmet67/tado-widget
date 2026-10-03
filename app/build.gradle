@@ -12,6 +12,9 @@ android {
         targetSdk 35
         versionCode 13
         versionName '2.2'
+        // Ship only the languages we translate: Italian on Italian devices, English for everyone else.
+        // (AGP 8.8+ replaces this with androidResources.localeFilters.)
+        resourceConfigurations += ['en', 'it']
     }
 
     // Release signing comes from the environment (see docs/releasing.md); never commit keys.
@@ -39,11 +42,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-
-    // Ship only the languages we translate: Italian on Italian devices, English for everyone else.
-    androidResources {
-        localeFilters += ['en', 'it']
     }
 
     buildFeatures {
