@@ -25,6 +25,7 @@ Builds run in GitHub Actions, so no local Android SDK is needed.
 
 - Package name `it.darkhelmet67.tado` (the existing listing, if you still own it, needs a higher versionCode than the old 1.0.5 / code 6).
 - Privacy policy URL: link to `PRIVACY.md` on GitHub.
+- Permissions: INTERNET and ACCESS_NETWORK_STATE only. Do not add REQUEST_IGNORE_BATTERY_OPTIMIZATIONS (Play policy); the app links to system settings instead.
 - Data safety form: the app collects no data; account credentials are handled by tado°'s login, tokens stay on device.
 - Target API level: Play requires a recent level (currently 35 when this was written). Check the Play requirements before each release.
 - Store listing: screenshots, short and full description. State clearly that the app is unofficial and requires a tado° account. Do not use tado°'s logo as the app icon.

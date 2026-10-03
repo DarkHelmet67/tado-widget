@@ -33,6 +33,8 @@ No official API reference exists. Auth: `https://login.tado.com/oauth2/{device_a
 ## Background network blocking (found from a real log)
 A user log showed instant `UnknownHostException ... No address associated with hostname` (1-3 ms) for every refresh while the app was in the background, and success whenever it was on screen: Android blocks background network (Data Saver / restricted battery). `NetworkDiagnostics.describe()` is logged on every `REFRESH start`. Mitigations: `RefreshWorker.doWork` returns `retry()` on NETWORK (WorkManager only runs jobs when the system grants network); the tap path falls back to `RefreshScheduler.refreshNow` when the direct attempt hits NETWORK; settings show a warning plus "Allow background access". Do not mistake this for a real outage.
 
+Permissions: only INTERNET and ACCESS_NETWORK_STATE (normal, no prompt). Deliberately NOT requesting REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: Google Play restricts it to apps whose core function needs it. Background restrictions are handled by sending the user to system settings (`openBackgroundSettings`).
+
 ## Widget behaviour notes
 Tap -> `ACTION_REFRESH` handled with `goAsync()` + a thread (not WorkManager) so it is immediate; state goes `REFRESHING` then OK/ERROR. The click PendingIntent is set on every widget view. Two pages per widget (`AppPrefs.getPage(widgetId)`, `ACTION_PAGE`): temperatures / humidity + heating power. Network errors are retried once in `RefreshWorker.refresh`.
 
