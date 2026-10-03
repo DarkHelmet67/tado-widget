@@ -11,6 +11,7 @@ import it.darkhelmet67.tado.api.TadoException;
 import it.darkhelmet67.tado.api.ZoneState;
 import it.darkhelmet67.tado.auth.SecureTokenStore;
 import it.darkhelmet67.tado.util.AppLog;
+import it.darkhelmet67.tado.util.NetworkDiagnostics;
 
 /** Fetches the configured zone's state (one API call) and redraws the widgets. */
 public class RefreshWorker extends Worker {
@@ -22,19 +23,26 @@ public class RefreshWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        refresh(getApplicationContext());
+        TadoException.Kind failure = refresh(getApplicationContext());
+        // No network right now (e.g. the system blocks background access): let WorkManager retry later.
+        if (failure == TadoException.Kind.NETWORK && getRunAttemptCount() < 4) return Result.retry();
         return Result.success();
     }
 
-    /** Blocking refresh, shared by the periodic worker and the tap-to-refresh path. */
-    public static void refresh(Context context) {
+    /**
+     * Blocking refresh, shared by the periodic worker and the tap-to-refresh path.
+     *
+     * @return the kind of failure, or null if the refresh worked
+     */
+    public static TadoException.Kind refresh(Context context) {
         Context app = context.getApplicationContext();
         AppPrefs prefs = new AppPrefs(app);
         SecureTokenStore tokens = new SecureTokenStore(app);
         WidgetState last = prefs.getState();
-        AppLog.d("REFRESH", "start");
+        AppLog.d("REFRESH", "start " + NetworkDiagnostics.describe(app));
 
         WidgetState next;
+        TadoException.Kind failureKind = null;
         if (tokens.load() == null) {
             next = last.withStatus(WidgetState.Status.NEEDS_LOGIN);
         } else if (!prefs.hasZone()) {
@@ -69,10 +77,14 @@ public class RefreshWorker extends Worker {
             } else {
                 next = last.withStatus(WidgetState.Status.ERROR);
             }
-            if (failure != null) AppLog.d("REFRESH", "failed: " + failure.kind + " " + failure.getMessage());
+            if (failure != null) {
+                failureKind = failure.kind;
+                AppLog.d("REFRESH", "failed: " + failure.kind + " " + failure.getMessage());
+            }
         }
         AppLog.d("REFRESH", "result " + next.status);
         prefs.setState(next);
         TadoWidgetProvider.updateAll(app);
+        return failureKind;
     }
 }

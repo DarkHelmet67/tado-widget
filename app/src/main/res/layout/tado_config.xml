@@ -129,6 +129,29 @@
                 android:text="@string/action_sign_out" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textBackgroundWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/warning_background_restricted"
+            android:textColor="@color/colorAccent"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/buttonBackgroundSettings"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/action_background_settings" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/note_background_settings"
+            android:textSize="@dimen/activity_config_text_label" />
+
         <Button
             android:id="@+id/buttonShareLog"
             style="?attr/materialButtonOutlinedStyle"

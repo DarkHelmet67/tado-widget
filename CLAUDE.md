@@ -30,6 +30,9 @@ No official API reference exists. Auth: `https://login.tado.com/oauth2/{device_a
 ## Logging
 `util/AppLog` (init in `TadoApp`) writes through `util/RotatingFileLog` (pure Java, tested) to `getExternalFilesDir/logs/tado-widget.log` (256 KB x 3 files). `api/LoggingInterceptor` logs `METHOD host/path -> status ms` (never the query string, headers or success bodies; error bodies truncated to 200 chars). The settings screen has **Share log** (FileProvider `${applicationId}.logs`, combines files into `tado-widget-log-export.txt`). Never log tokens, device codes or credentials.
 
+## Background network blocking (found from a real log)
+A user log showed instant `UnknownHostException ... No address associated with hostname` (1-3 ms) for every refresh while the app was in the background, and success whenever it was on screen: Android blocks background network (Data Saver / restricted battery). `NetworkDiagnostics.describe()` is logged on every `REFRESH start`. Mitigations: `RefreshWorker.doWork` returns `retry()` on NETWORK (WorkManager only runs jobs when the system grants network); the tap path falls back to `RefreshScheduler.refreshNow` when the direct attempt hits NETWORK; settings show a warning plus "Allow background access". Do not mistake this for a real outage.
+
 ## Widget behaviour notes
 Tap -> `ACTION_REFRESH` handled with `goAsync()` + a thread (not WorkManager) so it is immediate; state goes `REFRESHING` then OK/ERROR. The click PendingIntent is set on every widget view. Two pages per widget (`AppPrefs.getPage(widgetId)`, `ACTION_PAGE`): temperatures / humidity + heating power. Network errors are retried once in `RefreshWorker.refresh`.
 
@@ -39,7 +42,7 @@ Tap -> `ACTION_REFRESH` handled with `goAsync()` + a thread (not WorkManager) so
 ## Status / TODO
 - Done: build upgrade, API client, login, widget, settings, tests, CI (`build.yml`), release workflow (`release.yml`, needs signing secrets), docs, privacy policy.
 - Not yet verified on a real device or against the live tado° API (CI only runs unit tests with a mock server). First real-world test should confirm the device flow, the `/me` and zone-state fields, and widget rendering.
-- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.1.0` / code 11.
+- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.1.1` / code 12.
 - Open items: unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`, arrows) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; LICENSE copyright still credits the tutorial author (“obaro”); possible per-widget zones, humidity, dark theme polish.
 
 ## Repo hygiene — IMPORTANT

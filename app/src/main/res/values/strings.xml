@@ -10,6 +10,9 @@
     <string name="label_heating_power">Heating power</string>
     <string name="action_next_page">Switch page</string>
     <string name="status_refreshing">Updating…</string>
+    <string name="action_background_settings">Allow background access</string>
+    <string name="note_background_settings">If the widget often shows "Update failed", set this app\'s mobile data to unrestricted and its battery use to unrestricted.</string>
+    <string name="warning_background_restricted">Android is restricting this app in the background (Data Saver or battery restriction). The widget cannot refresh until you allow it.</string>
     <string name="action_share_log">Share log</string>
     <string name="log_location">Log folder: %1$s</string>
     <string name="error_log_export">Could not prepare the log.</string>

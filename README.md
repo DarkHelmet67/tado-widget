@@ -38,6 +38,10 @@ The project builds in GitHub Actions on every push (see `.github/workflows/build
 
 The app writes a small rotating log (about 256 KB, 3 files) of network requests (method, path, status, duration, errors) and app events. It never contains passwords, tokens or response bodies. Open the app and press **Share log** to send it, or find it in `Android/data/it.darkhelmet67.tado/files/logs/` (newer Android versions hide `Android/data` from file managers; use Share log or a USB connection). Please attach it when reporting a problem.
 
+### "Update failed" in the background
+
+Some phones block network access for apps that are not on screen (Data Saver, "restricted" battery mode, vendor battery savers). The widget then fails with an instant "Unable to resolve host" error while the app works fine when opened. Open the app and press **Allow background access**, then set mobile data and battery use for the app to *unrestricted*. The log's `REFRESH start` lines show the relevant system state (`dataSaver`, `batteryOptimized`, `bgRestricted`, `standbyBucket`).
+
 ## How it works
 
 | Part | File |
@@ -52,6 +56,7 @@ More documentation: [tado° API notes](docs/tado-api.md), [releasing and Google 
 
 ## Version history
 
+- **2.1.1**: refreshes that fail because Android blocks background network access are retried by WorkManager; the log records the restriction (Data Saver, battery, standby bucket); settings show a warning and a shortcut to allow background access; zones are loaded once after sign-in.
 - **2.1.0**: tap refreshes immediately with an "Updating…" state; second page (arrows) with humidity and heating power; network log with a Share button; network errors retried once.
 - **2.0.3**: a temporary network error while returning from the browser no longer cancels the sign-in; loading zones retries.
 - **2.0.2**: sign-in can be continued with a button or by returning to the app, and shows the real error if the login cannot be completed or stored.

@@ -17,6 +17,7 @@ import java.util.Locale;
 
 import it.darkhelmet67.tado.ConfigActivity;
 import it.darkhelmet67.tado.R;
+import it.darkhelmet67.tado.api.TadoException;
 import it.darkhelmet67.tado.api.ZoneState;
 import it.darkhelmet67.tado.util.AppLog;
 
@@ -46,7 +47,11 @@ public class TadoWidgetProvider extends AppWidgetProvider {
                     AppPrefs prefs = new AppPrefs(app);
                     prefs.setState(prefs.getState().withStatus(WidgetState.Status.REFRESHING));
                     updateAll(app);
-                    RefreshWorker.refresh(app);
+                    if (RefreshWorker.refresh(app) == TadoException.Kind.NETWORK) {
+                        // Background network is blocked right now: WorkManager runs the job when allowed.
+                        AppLog.d("WIDGET", "network unavailable, deferring to WorkManager");
+                        RefreshScheduler.refreshNow(app);
+                    }
                 } finally {
                     pending.finish();
                 }

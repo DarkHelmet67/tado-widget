@@ -31,6 +31,7 @@ import it.darkhelmet67.tado.api.TadoException;
 import it.darkhelmet67.tado.api.Zone;
 import it.darkhelmet67.tado.auth.SecureTokenStore;
 import it.darkhelmet67.tado.util.AppLog;
+import it.darkhelmet67.tado.util.NetworkDiagnostics;
 import it.darkhelmet67.tado.widget.AppPrefs;
 import it.darkhelmet67.tado.widget.RefreshScheduler;
 import it.darkhelmet67.tado.widget.TadoWidgetProvider;
@@ -65,6 +66,7 @@ public class ConfigActivity extends AppCompatActivity {
     private final Handler ui = new Handler(Looper.getMainLooper());
     private final List<ZoneChoice> choices = new ArrayList<>();
     private volatile boolean loginCancelled;
+    private final java.util.concurrent.atomic.AtomicBoolean zonesLoading = new java.util.concurrent.atomic.AtomicBoolean();
 
     private int widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private SecureTokenStore tokens;
@@ -121,6 +123,7 @@ public class ConfigActivity extends AppCompatActivity {
         buttonOpenLogin.setOnClickListener(v -> openLoginPage());
         findViewById(R.id.buttonCheckLogin).setOnClickListener(v -> checkLoginNow(true));
         findViewById(R.id.buttonCancelLogin).setOnClickListener(v -> cancelLogin());
+        findViewById(R.id.buttonBackgroundSettings).setOnClickListener(v -> openBackgroundSettings());
         findViewById(R.id.buttonShareLog).setOnClickListener(v -> shareLog());
         ((TextView) findViewById(R.id.textLogLocation)).setText(getString(R.string.log_location, AppLog.location()));
         findViewById(R.id.buttonSave).setOnClickListener(v -> save());
@@ -261,8 +264,23 @@ public class ConfigActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        findViewById(R.id.textBackgroundWarning).setVisibility(
+                NetworkDiagnostics.backgroundLikelyRestricted(this) ? View.VISIBLE : View.GONE);
         // Coming back from the browser: do not wait for the next background poll.
         if (groupPending.getVisibility() == View.VISIBLE) checkLoginNow(false);
+    }
+
+    /** Opens the system screen where background data / battery use of this app can be unrestricted. */
+    private void openBackgroundSettings() {
+        Uri pkg = Uri.parse("package:" + getPackageName());
+        Intent intent = NetworkDiagnostics.dataSaverBlocksApp(this)
+                ? new Intent(android.provider.Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS, pkg)
+                : new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, pkg);
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+        }
     }
 
     private void shareLog() {
@@ -300,6 +318,7 @@ public class ConfigActivity extends AppCompatActivity {
     // ---- Zone selection ----
 
     private void loadZones() {
+        if (!zonesLoading.compareAndSet(false, true)) return; // already loading (two sign-in checks can finish together)
         textStatus.setText(R.string.status_loading_zones);
         io.execute(() -> {
             // The network is often not ready right after coming back from the browser: retry a few times.
@@ -313,6 +332,7 @@ public class ConfigActivity extends AppCompatActivity {
                             found.add(new ZoneChoice(home.id, zone.id, label));
                         }
                     }
+                    zonesLoading.set(false);
                     ui.post(() -> showZones(found));
                     return;
                 } catch (TadoException e) {
@@ -321,10 +341,12 @@ public class ConfigActivity extends AppCompatActivity {
                             Thread.sleep(2000);
                         } catch (InterruptedException ie) {
                             Thread.currentThread().interrupt();
+                            zonesLoading.set(false);
                             return;
                         }
                         continue;
                     }
+                    zonesLoading.set(false);
                     ui.post(() -> fail(e));
                     return;
                 }
