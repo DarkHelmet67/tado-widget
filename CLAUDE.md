@@ -50,7 +50,7 @@ Tap -> `ACTION_REFRESH` handled with `goAsync()` + a thread (not WorkManager) so
 ## Status / TODO
 - Done: build upgrade, API client, login, widget, settings, tests, CI (`build.yml`), release workflow (`release.yml`, needs signing secrets), docs, privacy policy.
 - Verified on a real phone (2.1.1+): login, zone state, widget pages, refresh, log sharing. 2.2 is the first public release. Play Store publishing notes live in the owner's git-ignored `.private files/play-store-guide.md`.
-- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.2` / code 13.
+- APKs live in `versions/` (old 1.x ones moved there; `release.yml` on tag `v*` builds, commits the new APK to `versions/` on `main` and creates a GitHub release with `gh`). Version is `2.3` / code 14.
 - Open items: unused legacy drawables (`progressbar.xml`, `selector_btn_green.xml`, `shape_rounded_corners_alpha.xml`, `devices.png`, `settings_device.png`) and `app/app.iml`; launcher icon exists only in `mipmap-xxhdpi` (no adaptive icon); Play listing assets; possible per-widget zones, dark theme polish.
 - LICENSE keeps the original tutorial author's notice (obaro, 2015) and adds the owner's.
 

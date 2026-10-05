@@ -14,7 +14,7 @@ Builds run in GitHub Actions, so no local Android SDK is needed.
 
 ## Each release
 
-1. Bump `versionCode` and `versionName` in `app/build.gradle` (the code must increase every upload). Current: 2.2 (code 13).
+1. Bump `versionCode` and `versionName` in `app/build.gradle` (the code must increase every upload). Current: 2.3 (code 14).
 2. Commit and push, then `git tag v2.0 && git push --tags`.
 3. The `Release` workflow builds the APK (signed APK and AAB if the secrets above exist, otherwise a debug-signed APK named `...-debug.apk`), commits it to `versions/` on `main`, and attaches the files to a GitHub release (created with the `gh` CLI).
 4. Upload the `.aab` in Play Console.

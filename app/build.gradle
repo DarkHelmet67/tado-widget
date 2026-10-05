@@ -10,8 +10,8 @@ android {
         applicationId 'it.darkhelmet67.tado'
         minSdk 26
         targetSdk 35
-        versionCode 13
-        versionName '2.2'
+        versionCode 14
+        versionName '2.3'
         // Ship only the languages we translate: Italian on Italian devices, English for everyone else.
         // (AGP 8.8+ replaces this with androidResources.localeFilters.)
         resourceConfigurations += ['en', 'it']
