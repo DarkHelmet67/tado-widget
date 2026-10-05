@@ -32,6 +32,17 @@ Premi **Salva**. Il widget compare e si aggiorna.
 | Icona a sinistra | Modalità: casa = programma, fuori casa, mano = manuale, standby = spento |
 | Testo in basso | Ora dell'ultimo aggiornamento, o uno stato come "Aggiornamento…" |
 
+Il **colore di sfondo** segue lo stato della tua zona tado°:
+
+| Colore | Stato |
+|---|---|
+| Ambra / giallo | Attivo: la zona segue il programma (a casa) |
+| Verde | Fuori casa |
+| Grigio | Controllo manuale |
+| Scuro / nero | Spento, oppure il widget non è ancora configurato o collegato |
+
+Il riscaldamento non è un colore: mentre la zona sta riscaldando compare l'**icona della fiamma** accanto alla temperatura impostata.
+
 - **Tocca il widget** per aggiornare subito.
 - **Frecce** (bordo sinistro / destro) per passare alla pagina 2: **umidità** e **potenza del riscaldamento**.
 - **Tocca l'icona della modalità** per aprire le impostazioni (cambia zona o frequenza, esci).
@@ -45,7 +56,12 @@ Premi **Salva**. Il widget compare e si aggiorna.
 | **Limite giornaliero tado° raggiunto** | tado° consente circa 100 richieste al giorno sugli account gratuiti. Usa una frequenza più lunga; il widget mantiene gli ultimi valori e si riprende da solo. |
 | I valori sembrano vecchi | Tocca il widget per aggiornare, poi controlla la frequenza nelle impostazioni. |
 
-Se qualcosa ancora non funziona, apri le impostazioni e premi **Condividi log**. Usalo **solo per inviare un log di debug all'autore del widget**: contiene percorsi delle richieste, codici di stato e tempi, ma mai la password o i token. Puoi allegarlo a una [segnalazione](https://github.com/DarkHelmet67/tado-widget/issues).
+Se qualcosa ancora non funziona, segnalalo aprendo una [issue su GitHub](https://github.com/DarkHelmet67/tado-widget/issues) e allega un log di debug:
+
+1. Apri le impostazioni e premi **Condividi log**, poi salva il file (ad esempio in File o Drive).
+2. Nella nuova issue trascina il file nella descrizione per allegarlo.
+
+Usa **Condividi log solo per questo**: non inviare i log via email all'autore. Una issue è pubblica, quindi leggi il log prima di allegarlo: contiene percorsi delle richieste, orari e i numeri della tua casa e zona tado°, ma mai la password o i token.
 
 ## 6. Esci e disinstalla
 

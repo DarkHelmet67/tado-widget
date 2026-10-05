@@ -8,7 +8,7 @@ An unofficial Android home-screen widget that shows the current temperature, tar
 
 ## Features
 
-- Room temperature, target temperature, heating indicator and mode icon (home, away, manual override, off), tinted by mode
+- Room temperature, target temperature, heating indicator and mode icon (home, away, manual override, off); the background colour follows the zone state (amber = schedule, green = away, grey = manual, dark = off)
 - Secure sign-in with tado°'s OAuth device-code login: you approve on tado°'s website and the app never sees your password
 - Choose which home and zone to show
 - Two pages (switch with the arrows): temperatures, then humidity and heating power
@@ -40,7 +40,7 @@ The project builds in GitHub Actions on every push (see `.github/workflows/build
 
 ## Troubleshooting and logs
 
-The app writes a small rotating log (about 256 KB, 3 files) of network requests (method, path, status, duration, errors) and app events. It never contains passwords, tokens or response bodies. Open the app and press **Share log** to send it, or find it in `Android/data/it.darkhelmet67.tado/files/logs/` (newer Android versions hide `Android/data` from file managers; use Share log or a USB connection). Please attach it when reporting a problem.
+The app writes a small rotating log (about 256 KB, 3 files) of network requests (method, path, status, duration, errors) and app events. It never contains passwords, tokens or response bodies. Open the app and press **Share log** to send it, or find it in `Android/data/it.darkhelmet67.tado/files/logs/` (newer Android versions hide `Android/data` from file managers; use Share log or a USB connection). Please attach it to an [issue on GitHub](https://github.com/DarkHelmet67/tado-widget/issues) when reporting a problem (do not email it; issues are public, so look through the log first: it holds your tado° home and zone numbers).
 
 ### "Update failed" in the background
 

@@ -13,7 +13,7 @@
     <string name="action_background_settings">Allow background access</string>
     <string name="note_background_settings">If the widget often shows \"Update failed\", set this app\'s mobile data to unrestricted and its battery use to unrestricted.</string>
     <string name="warning_background_restricted">Android is restricting this app in the background (Data Saver or battery restriction). The widget cannot refresh until you allow it.</string>
-    <string name="note_share_log">Debug only: use \"Share log\" only to send a debug log to the widget author when something does not work. The log contains request paths, status codes and timings, but never your password or tokens.</string>
+    <string name="note_share_log">Debug only: use \"Share log\" to save a debug log and attach it to an issue on GitHub (github.com/DarkHelmet67/tado-widget) when something does not work. Issues are public: the log contains request paths, times and your tado° home and zone numbers, but never your password or tokens.</string>
     <string name="action_share_log">Share log</string>
     <string name="log_location">Log folder: %1$s</string>
     <string name="error_log_export">Could not prepare the log.</string>

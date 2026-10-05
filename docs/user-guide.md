@@ -32,6 +32,17 @@ Press **Save**. The widget appears and updates.
 | Icon on the left | Mode: house = schedule, away, hand = manual override, standby = off |
 | Small text at the bottom | Time of the last update, or a status such as "Updating…" |
 
+**Background colour** follows the state of your tado° zone:
+
+| Colour | State |
+|---|---|
+| Amber / yellow | Active: the zone follows its schedule (home) |
+| Green | Away |
+| Grey | Manual override |
+| Dark / black | Off, or the widget is not set up or signed in yet |
+
+Heating is not a colour: while the zone is heating, the **flame icon** appears next to the target temperature.
+
 - **Tap the widget** to refresh now.
 - **Arrows** (left / right edge) switch to page 2: **humidity** and **heating power**.
 - **Tap the mode icon** to open the settings (change zone or interval, sign out).
@@ -45,7 +56,12 @@ Press **Save**. The widget appears and updates.
 | **Daily tado° limit reached** | tado° allows about 100 requests per day on free accounts. Use a longer refresh interval; the widget keeps the last values and recovers by itself. |
 | Values look old | Tap the widget to refresh, then check the interval in the settings. |
 
-If something still does not work, open the settings and press **Share log**. Use it **only to send a debug log to the widget author**; it contains request paths, status codes and timings, but never your password or tokens. You can attach it to an [issue](https://github.com/DarkHelmet67/tado-widget/issues).
+If something still does not work, report it by opening an [issue on GitHub](https://github.com/DarkHelmet67/tado-widget/issues) and attach a debug log:
+
+1. Open the settings and press **Share log**, then save the file (for example to Files or Drive).
+2. In the new issue, drag the file into the description to attach it.
+
+Use **Share log only for this**: do not email logs to the author. An issue is public, so read the log before attaching it: it contains request paths and times and your tado° home and zone numbers, but never your password or tokens.
 
 ## 6. Sign out and uninstall
 

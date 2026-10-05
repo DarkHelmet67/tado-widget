@@ -10,7 +10,7 @@
 
 **Debug log**
 
-The app keeps a small rotating log on your device (request paths, status codes, timings, app events; never passwords, tokens or response contents). It leaves the device only if you press "Share log" and choose where to send it, for example to the developer when reporting a problem.
+The app keeps a small rotating log on your device (request paths, status codes, timings, app events; never passwords, tokens or response contents). It leaves the device only if you press "Share log" and choose where to send it, for example by attaching it to a public issue on GitHub when reporting a problem. A shared log contains tado° home and zone numbers and request times, so check it before posting.
 
 **What the app does not do**
 
