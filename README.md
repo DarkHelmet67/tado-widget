@@ -60,6 +60,7 @@ More documentation: [user guide](docs/user-guide.md), [guida in italiano](docs/u
 
 ## Version history
 
+- **2.3.1**: adds the Google Play package-ownership registration file (`app/src/main/assets/adi-registration.properties`); no functional changes.
 - **2.3**: first build signed with the original release key and published as an Android App Bundle for Google Play; no functional changes.
 - **2.2**: first public release. Language follows the phone (Italian, otherwise English; per-app language on Android 13+), a note on the Share log button, quick user guides ([English](docs/user-guide.md), [Italiano](docs/user-guide.it.md)), string-parity test.
 - **2.1.1**: refreshes that fail because Android blocks background network access are retried by WorkManager; the log records the restriction (Data Saver, battery, standby bucket); settings show a warning and a shortcut to allow background access; zones are loaded once after sign-in.

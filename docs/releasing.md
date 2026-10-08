@@ -16,7 +16,7 @@ Keep the keystore and its passwords backed up in at least two places and never c
 
 ## Each release
 
-1. Bump `versionCode` and `versionName` in `app/build.gradle` (the code must increase every upload). Current: 2.3 (code 14).
+1. Bump `versionCode` and `versionName` in `app/build.gradle` (the code must increase every upload). Current: 2.3.1 (code 15).
 2. Commit and push, then `git tag v2.0 && git push --tags`.
 3. The `Release` workflow builds the APK (signed APK and AAB if the secrets above exist, otherwise a debug-signed APK named `...-debug.apk`), commits it to `versions/` on `main`, and attaches the files to a GitHub release (created with the `gh` CLI).
 4. Download `tado-widget-X.Y.aab` from the GitHub release page (bundles are not committed to `versions/`) and upload it in Play Console.
@@ -24,6 +24,10 @@ Keep the keystore and its passwords backed up in at least two places and never c
 To check which key signed a build: `unzip -p tado-widget-X.Y.aab 'META-INF/*.RSA' | openssl pkcs7 -inform DER -print_certs | openssl x509 -noout -subject -enddate -fingerprint -sha256`. The fingerprint must stay the same across releases and match Play Console (Setup > App signing).
 
 `versions/` also holds the archived 1.x APKs. Pull before your next push, because the workflow adds a commit to `main`.
+
+## Package registration (Android developer verification)
+
+Play Console may ask you to register the package name. `app/src/main/assets/adi-registration.properties` holds the registration snippet (only that text) and must remain in every release. The registration is done by uploading a release APK signed with the key whose fingerprint was given in the console. Details: https://support.google.com/googleplay/android-developer/answer/16761053
 
 ## Play Console checklist
 
